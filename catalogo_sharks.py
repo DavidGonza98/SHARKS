@@ -45,7 +45,6 @@ class Catalogo():
         else:
             print('La variable ingresada no es correcta')
             
-x=5
         
         
         
