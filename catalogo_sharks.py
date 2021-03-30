@@ -48,11 +48,12 @@ class Catalogo():
         
             
            
-sharks=Catalogo('Sharks', 'sharks_sgpe.fits')
+sharks=Catalogo('Sharks', 'Sharks_sgpe_e_2_cat_small.fits')
 
 
 print(sharks.Extraer_columna('RA'))
-print(sharks.mascara('RA','MAG_AUTO'))
+print(sharks.mascara('MAGERR_AUTO','MAG_AUTO'))
+#Probando
 
 
 
