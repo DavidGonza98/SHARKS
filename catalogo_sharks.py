@@ -13,11 +13,12 @@ class Catalogo():
     def __init__(self, nombre, archivo):
         self.nombre= nombre
         self.archivo= archivo
-        self.datos = Table.read(self.archivo, format= 'fits')
         
+        self.lineas=False
         self.Lleno=False
     
     def LeerArchivo(self):
+        self.datos = Table.read(self.archivo, format= 'fits')
 
         self.Lleno=True
         
@@ -32,12 +33,26 @@ class Catalogo():
         
     def Extraer_columna(self, DameColumna):
         
+                
         if DameColumna in self.datos.keys():
-            print('La columna', DameColumna, 'tiene una longitud de', len(self.datos[DameColumna]))
+            print('La columna', DameColumna, 'tiene una longitud de', len(self.datos[DameColumna]), 'un maximo de', np.max(self.datos[DameColumna]),'y un minimo de', np.min(self.datos[DameColumna]))
             return self.datos[DameColumna]
 
         else:
             print ('El nombre de la columna ingresada no se encuentra en el catalogo', self.nombre)
+
+
+    def estado(self, RA, DEC):
+        self.linea=True
+        if self.linea:
+            print('La linea se ha cargado correctamente')
+            
+            print('El valor maximo de la columna',RA, 'es',np.max(self.datos[RA]),' y el minimo', np.min(self.datos[RA]))
+            print('El valor maximo de la columna',DEC, 'es',np.max(self.datos[DEC]), ' y el minimo', np.min(self.datos[DEC]))
+            
+            
+        else:
+            print('No ha sido posible cargar las lineas')
 
     def mascara(self, Columna1, Columna2):
         
@@ -48,11 +63,12 @@ class Catalogo():
         
             
            
-sharks=Catalogo('Sharks', 'Sharks_sgpe_e_2_cat_small.fits')
+sharks=Catalogo('Sharks', 'Sharks_sgp_e_2_cat_small.fits')
 
-
-print(sharks.Extraer_columna('RA'))
-print(sharks.mascara('MAGERR_AUTO','MAG_AUTO'))
+sharks.LeerArchivo()
+ra = sharks.Extraer_columna('ALPHA_J2000')
+sharks.estado('ALPHA_J2000', 'DELTA_J2000')
+#print(sharks.mascara('MAGERR_AUTO','MAG_AUTO'))
 #Probando
 
 
