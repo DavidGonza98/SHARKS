@@ -39,21 +39,49 @@ class Catalogo():
         else:
             print ('El nombre de la columna ingresada no se encuentra en el catalogo', self.nombre)
 
-    def mascara(self, Columna1, Columna2):
+    def __makeCondition(self, condicion):
+        if condicion[1] == 'greater':
+            return np.greater(self.Extraer_columna(condicion[0]), condicion[2])
+        elif condicion[1] == 'greater_equal':
+            return np.greater_equal(self.Extraer_columna(condicion[0]), condicion[2])
+        elif condicion[1] == 'less':
+            return np.less(self.Extraer_columna(condicion[0]), condicion[2])
+        elif condicion[1] == 'less_equal':
+            return np.less_equal(self.Extraer_columna(condicion[0]), condicion[2])
+        elif condicion[1] == 'equal':
+            return np.equal(self.Extraer_columna(condicion[0]), condicion[2])
+        elif condicion[1] == 'not_equal':
+            return np.not_equal(self.Extraer_columna(condicion[0]), condicion[2])
+        else:
+            return 0
+
+
+    def mascara(self, listaCondiciones):
+        '''condiciones sera una lista de listas, algo como: [['MAG_AUTO','greater',12.3], ['MAGERR_AUTO','greater',0.]]
+        Los valores aceptados de condicional son: greater, greater_equal, less, less_equal, equal, not_equal
+        '''
+        if self.Lleno:
+            mask = (self.__makeCondition(listaCondiciones[0]))
+            if len(listaCondiciones)>1:
+                for m in range(len(listaCondiciones)-1):
+                    mask = mask*(self.__makeCondition(listaCondiciones[m+1]))
         
-        if self.datos[Columna1]>0 and self.datos[Columna2]>12.3:
-            
-            self.mascara=self.datos
-            return len(self.mascara)
+            self.datos = self.datos[mask]
+
+        else:
+            print('File not read')
         
             
            
-sharks=Catalogo('Sharks', 'Sharks_sgpe_e_2_cat_small.fits')
-
+sharks=Catalogo('Sharks', 'Sharks_sgp_e_2_cat_small.fits')
+sharks.LeerArchivo()
+print(len(sharks.datos))
 
 print(sharks.Extraer_columna('RA'))
-print(sharks.mascara('MAGERR_AUTO','MAG_AUTO'))
+#print(sharks.mascara('MAGERR_AUTO','MAG_AUTO'))
 #Probando
+sharks.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
+print('Despues de mascarar', len(sharks.datos))
 
 
 
