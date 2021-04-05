@@ -173,7 +173,7 @@ sharks.Distancia_Angular()
 
 sharks.Histograma('Distancia angular')   
 
-sharks.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
+#sharks.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
 
 #sharks.ajuste_lineal('MAG_AUTO', 'Kmag')  
         
