@@ -183,10 +183,11 @@ class astrometria():
         
         #print(self.datos1[x])
         
-        p=plt.polyfit(self.unify_mask[x], self.unify_mask[x], 1)
+        p=plt.polyfit(self.unify_mask[x], self.unify_mask[y], 1)
         Y=p[0]*self.unify_mask[x] + p[1] 
         plt.plot(self.unify_mask[x], Y)
-        plt.plot(self.unify_mask[x], self.unify_mask[x], '.')
+        plt.plot(self.unify_mask[x], self.unify_mask[y], '.')
+        print ('El valor de la pendiente del ajuste lienal es', p[0], 'y su ordenada en el origen', p[1]  )
         
         
             
