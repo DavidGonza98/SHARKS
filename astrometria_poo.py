@@ -22,7 +22,8 @@ class astrometria():
         self.nside=4096 
         self.maxmatch=1 
         self.radius= 1/3600.
-        
+
+        self.Lleno=False
         
     def LeerArchivo(self):
         self.datos1 = Table.read(self.archivo1, format= 'fits')
@@ -43,7 +44,7 @@ class astrometria():
     def Extraer_columna(self, DameColumna):
         
                 
-        if DameColumna in self.datos1.keys():
+        if DameColumna in self.MainCatalog.keys():
             print('La columna', DameColumna, 'tiene una longitud de', len(self.datos1[DameColumna]), 'un maximo de', np.max(self.datos1[DameColumna]),'y un minimo de', np.min(self.datos1[DameColumna]))
             return self.datos1[DameColumna]
         
@@ -56,19 +57,23 @@ class astrometria():
             
     def Match(self, ra1, dec1, ra2, dec2):
         if (self.Lleno):
-            self.ra1=self.datos1[ra1]
-            self.dec1=self.datos1[dec1]
-            self.ra2=self.datos2[ra2]
-            self.dec2=self.datos2[dec2]
-            print('La longitud de', ra1, 'es', len(self.ra1), 'y la de', dec1, 'es', len(self.dec1) )
-            print('La longitud de', ra2, 'es', len(self.ra2), 'y la de', dec2, 'es', len(self.dec2) )
-            self.matches = smatch.match(self.ra1, self.dec1, self.radius, self.ra2, self.dec2, nside=self.nside, maxmatch=self.maxmatch)
+            ra1=self.datos1[ra1]
+            dec1=self.datos1[dec1]
+            ra2=self.datos2[ra2]
+            dec2=self.datos2[dec2]
+            print('La longitud de', ra1, 'es', len(ra1), 'y la de', dec1, 'es', len(dec1) )
+            print('La longitud de', ra2, 'es', len(ra2), 'y la de', dec2, 'es', len(dec2) )
+            self.matches = smatch.match(ra1, dec1, self.radius, ra2, dec2, nside=self.nside, maxmatch=self.maxmatch)
             
-            self.ra1_matched= self.ra1 [self.matches['i1']]
-            self.dec1_matched= self.dec1 [self.matches['i1']]
-            self.ra2_matched= self.ra2 [self.matches['i2']]
-            self.dec2_matched= self.dec2 [self.matches['i2']]
-            print('La longitud de', ra1,',', dec1,',', ra2,',', dec2, 'ya habiendo realizado el matched es', len(self.ra1_matched))
+            self.assoc1 = self.datos1[self.matches['i1']]
+            self.assoc2 = self.datos2[self.matches['i2']]
+
+
+#            self.ra1_matched= self.ra1 [self.matches['i1']]
+#            self.dec1_matched= self.dec1 [self.matches['i1']]
+#            self.ra2_matched= self.ra2 [self.matches['i2']]
+#            self.dec2_matched= self.dec2 [self.matches['i2']]
+            print('La longitud del catalogo ya habiendo realizado el matched es', len(self.assoc1))
             
             
         else:
@@ -138,9 +143,9 @@ class astrometria():
                     mask = mask*(self.__makeCondition(listaCondiciones[m+1]))
 
         
-            self.datos1_mask = self.datos1[mask]
-            self.datos2_mask = self.datos2[mask]
-
+            self.datos1_mask = self.assoc1[mask]
+            self.datos2_mask = self.assoc2[mask]
+            print(len(self.datos1_mask))
         else:
             print('File not read')
     
@@ -152,10 +157,14 @@ class astrometria():
         
             
             
-            
+    def DefineMain(datos):
+        if datos == 'sharks':
+            self.MainCatalog = self.datos1
+        else:
+            self.MainCatalog = self.datos2
             
         
-sharks=astrometria('Sharks','Sharks_sgp_e_2_cat_small.fits', '2mass', '2mass.fit')   
+sharks=astrometria('Sharks','/home/acarnero/Documents/tfg/Sharks_sgp_e_2_cat_small.fits', '2mass', '/home/acarnero/Documents/tfg/2mass.fit')   
 
 sharks.LeerArchivo()
 
@@ -164,14 +173,29 @@ sharks.Extraer_columna('Kmag')
 
 sharks.Match('ALPHA_J2000', 'DELTA_J2000', 'RAJ2000', 'DEJ2000')
        
-sharks.Matches('MAG_AUTO', 'MAGERR_AUTO', 'Kmag', 'e_Kmag')       
 
-sharks.Distancia_Angular()    
+#sharks.DefineMain('Sharks') #o podrias poner '2mass'
+
+sharks.Unify()
+
+
+    #self.MainCatalog = union assoc1 y assoc2
+1) crear un dictionario nuevo vacio.
+2) Leer las columnas de sharks y añadirlas al nuevo
+3) leer las columnas de 2mass y añadirlas al nuevo
 
 
 
 
-sharks.Histograma('Distancia angular')   
+#sharks.Matches('MAG_AUTO', 'MAGERR_AUTO', 'Kmag', 'e_Kmag')       
+
+#sharks.Distancia_Angular()    
+
+
+
+
+#plot = sharks.Histograma('Distancia angular')   
+#plt.savefig('dist_angular.png')
 
 sharks.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
 
