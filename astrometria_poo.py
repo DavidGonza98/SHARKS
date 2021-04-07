@@ -110,7 +110,7 @@ class astrometria():
 
     def Extraer_columna(self, DameColumna, matched):
         
-        if self.matched == True:
+        if self.matched:
             if DameColumna in self.unify.keys():
                 print('La columna', DameColumna, 'tiene una longitud de', len(self.unify[DameColumna]), 'un maximo de', np.max(self.unify[DameColumna]),'y un minimo de', np.min(self.unify[DameColumna]))
                 return self.unify[DameColumna]
@@ -189,8 +189,14 @@ class astrometria():
                 
         self.p=plt.polyfit(self.unify_mask[magnitud1], self.unify_mask[magnitud2], 1)
         Y=self.p[0]*self.unify_mask[magnitud1] + self.p[1] 
-        plt.plot(self.unify_mask[magnitud1], Y)
-        plt.plot(self.unify_mask[magnitud1], self.unify_mask[magnitud2], '.')
+        plt.figure(1)
+        plt.plot(self.unify_mask[magnitud1], Y, label = "Ajuste y = %.3f + %.3f x" % (self.p[1],self.p[0]))
+        plt.plot(self.unify_mask[magnitud1], self.unify_mask[magnitud2], '.', label='Datos')
+        plt.legend()
+        plt.title('Ajuste sin errores y con outliers')
+        plt.xlabel(magnitud1)
+        plt.ylabel(magnitud2)
+        plt.savefig('Ajuste archivo grande sin errores y con outliers.png')
         print ('El valor de la pendiente del ajuste lineal es', self.p[0], 'y su ordenada en el origen', self.p[1]  )
         
         
@@ -213,28 +219,44 @@ class astrometria():
         out = optimize.leastsq(errfunc, pinit, args=(self.unify_mask[magnitud1], self.unify_mask[magnitud2],  self.unify_mask[errormagnitud1]), full_output=1)
         #print(pinit)
         self.pfinal = out[0]
-        
+        print(self.pfinal)
         ajuste_con_error2= self.pfinal[1]*self.unify_mask[magnitud1] + self.pfinal[0]
-        
+        plt.figure(2)
+        plt.plot(self.unify_mask[magnitud1], ajuste_con_error2, label = "Ajuste y = %.3f + %.3f x" % (self.pfinal[0],self.pfinal[1]))
+        plt.plot(self.unify_mask[magnitud1], self.unify_mask[magnitud2], '.', label='Datos')
+        plt.xlabel(magnitud1)
+        plt.ylabel(magnitud2)
+        plt.legend()
+        plt.title('Ajuste con error y con outliers')
+        plt.savefig('Ajuste archivo grande con error y con outliers.png')
         if quitarOutliers:
             z = (self.unify_mask[magnitud2] - ajuste_con_error2)/self.unify_mask[errormagnitud1]
 
             pf = pd.DataFrame(zip(self.unify_mask[magnitud2], self.unify_mask[magnitud1], self.unify_mask[errormagnitud1]))
             pf_sin_outliers = pf[(np.abs(z) < 2.5)]
-            
+            plt.figure(3)
             m, b = plt.polyfit(pf_sin_outliers[1], pf_sin_outliers[0], 1)
-            plt.plot(pf_sin_outliers[1], m*pf_sin_outliers[1]+b, 'r-')
-            plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'b.')
+            plt.plot(pf_sin_outliers[1], m*pf_sin_outliers[1]+b, 'r-', label = "Ajuste y = %.3f + %.3f x" % (b,m))
+            plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'b.', label='Datos')
+            plt.legend()
+            plt.xlabel(magnitud1)
+            plt.ylabel(magnitud2)
+            plt.title('Ajuste sin errores y sin outliers')
+            plt.savefig('Ajuste archivo grande sin errores y sin outliers.png')
             
             pinit = [1,1]
             out_sin_outliers = optimize.leastsq(errfunc, pinit, args=(pf_sin_outliers[1], pf_sin_outliers[0],  pf_sin_outliers[2]), full_output=1)
             self.pfinal_sin_outliers= out_sin_outliers[0]
             ajuste_sin_outliers= self.pfinal_sin_outliers[1]*pf_sin_outliers[1] + self.pfinal_sin_outliers[0]
             
-            plt.figure(2)
-            plt.plot(pf_sin_outliers[1], ajuste_sin_outliers, 'm')
-            plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'y.')
-            
+            plt.figure(4)
+            plt.plot(pf_sin_outliers[1], ajuste_sin_outliers, 'm', label = "Ajuste y = %.3f + %.3f x" % (self.pfinal_sin_outliers[0],self.pfinal_sin_outliers[1]))
+            plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'y.', label='Datos')
+            plt.legend()
+            plt.xlabel(magnitud1)
+            plt.ylabel(magnitud2)
+            plt.title('Ajuste con error y sin outliers')
+            plt.savefig('Ajuste archivo grande sin outliers y con error.png')
             if pendienteuno:
                 fitfunc = lambda p, x: p[0] + x
                 pinit = [1,1]
@@ -247,17 +269,24 @@ class astrometria():
                 pf_sin_outliers = pf[(np.abs(z) < 2.5)]
             
                 m, b = plt.polyfit(pf_sin_outliers[1], pf_sin_outliers[0], 1)
-                plt.figure(3)
-                plt.plot(pf_sin_outliers[1], pf_sin_outliers[1]+b, 'r-')
-                plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'y.')
+                plt.figure(5)
+                plt.plot(pf_sin_outliers[1], pf_sin_outliers[1]+b, 'r-', label='Ajuste para m=1')
+                
             
                 pinit = [1,1]
                 out_sin_outliers = optimize.leastsq(errfunc, pinit, args=(pf_sin_outliers[1], pf_sin_outliers[0],  pf_sin_outliers[2]), full_output=1)
                 self.pfinal_sin_outliers= out_sin_outliers[0]
-                ajuste_sin_outliers= self.pfinal_sin_outliers[1]*pf_sin_outliers[1] + self.pfinal_sin_outliers[0]
+                
+                ajuste_sin_outliers= pf_sin_outliers[1] + self.pfinal_sin_outliers[0]
             
                 
-                plt.plot(pf_sin_outliers[1], ajuste_sin_outliers, 'm')
+                plt.plot(pf_sin_outliers[1], ajuste_sin_outliers, 'm', label = "Ajuste y = %.3f + x" % (self.pfinal_sin_outliers[0]) )
+                plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'y.', label='Datos')
+                plt.legend()
+                plt.title('Ajuste con pendiente m=1, con errores y sin outliers')
+                plt.xlabel(magnitud1)
+                plt.ylabel(magnitud2)
+                plt.savefig('Ajuste archivo grande para m=1 sin outliers y con error.png')
 
         
                 
@@ -272,11 +301,11 @@ class astrometria():
             
             
         
-sharks=astrometria('Sharks','Sharks_sgp_e_2_cat_small.fits', '2mass', '2mass.fit')   
+sharks=astrometria('Sharks','Sharks_sgpe.fits', '2mass', '2mass_in_field.fits')   
 
 sharks.LeerArchivo()
 
-sharks.Match('ALPHA_J2000', 'DELTA_J2000', 'RAJ2000', 'DEJ2000')
+sharks.Match('RA', 'DEC', 'RAJ2000', 'DEJ2000')
 sharks.MainCatalog()
 
 sharks.Extraer_columna('e_Kmag', True)
@@ -293,12 +322,12 @@ sharks.Extraer_columna('e_Kmag', True)
 #plot = sharks.Histograma('Distancia angular')   
 #plt.savefig('dist_angular.png')
 
-sharks.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.], ['e_Kmag','greater',0.]])
+sharks.mascara([['APERMAG3','greater_equal',12.3],['APERMAG3ERR','greater',0.], ['e_Kmag','greater',0.], ['Kmag', 'greater_equal', 12.7], ['Kmag', 'less_equal', 14.5]])
 
-sharks.ajuste_lineal('Kmag', 'MAG_AUTO')  #cambiar ord
+sharks.ajuste_lineal('Kmag', 'APERMAG3')  #cambiar ord
 #plt.savefig('Ajuste desde POO.png')
         
-sharks.errorfunc('Kmag', 'MAG_AUTO', 'e_Kmag', True, True)       
+sharks.errorfunc('Kmag', 'APERMAG3', 'e_Kmag', True, True)       
         
         
         
