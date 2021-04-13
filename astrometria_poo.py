@@ -196,7 +196,8 @@ class astrometria():
         plt.title('Ajuste sin errores y con outliers')
         plt.xlabel(magnitud1)
         plt.ylabel(magnitud2)
-        plt.savefig('Ajuste archivo grande sin errores y con outliers.png')
+        title='Sinerrores_y_conoutliers_de_archivoconjutode_' + self.nombre1+ '_y_'  + self.nombre2
+        plt.savefig(+title+'.png')
         print ('El valor de la pendiente del ajuste lineal es', self.p[0], 'y su ordenada en el origen', self.p[1]  )
         
         
@@ -228,7 +229,8 @@ class astrometria():
         plt.ylabel(magnitud2)
         plt.legend()
         plt.title('Ajuste con error y con outliers')
-        plt.savefig('Ajuste archivo grande con error y con outliers.png')
+        title1='Conerrores_y_conoutliers_de_archivoconjutode_' + self.nombre1+ '_y_'  + self.nombre2
+        plt.savefig(title1+'.png')
         if quitarOutliers:
             z = (self.unify_mask[magnitud2] - ajuste_con_error2)/self.unify_mask[errormagnitud1]
 
@@ -242,7 +244,8 @@ class astrometria():
             plt.xlabel(magnitud1)
             plt.ylabel(magnitud2)
             plt.title('Ajuste sin errores y sin outliers')
-            plt.savefig('Ajuste archivo grande sin errores y sin outliers.png')
+            title2='Sinerrores_y_sinoutliers_de_archivoconjutode_' + self.nombre1+ '_y_'  + self.nombre2
+            plt.savefig(title2+'.png')
             
             pinit = [1,1]
             out_sin_outliers = optimize.leastsq(errfunc, pinit, args=(pf_sin_outliers[1], pf_sin_outliers[0],  pf_sin_outliers[2]), full_output=1)
@@ -256,7 +259,8 @@ class astrometria():
             plt.xlabel(magnitud1)
             plt.ylabel(magnitud2)
             plt.title('Ajuste con error y sin outliers')
-            plt.savefig('Ajuste archivo grande sin outliers y con error.png')
+            title3='Conerrores_y_sinoutliers_de_archivoconjutode_' + self.nombre1+ '_y_'  + self.nombre2
+            plt.savefig(title3+'.png')
             if pendienteuno:
                 fitfunc = lambda p, x: p[0] + x
                 pinit = [1,1]
@@ -286,7 +290,8 @@ class astrometria():
                 plt.title('Ajuste con pendiente m=1, con errores y sin outliers')
                 plt.xlabel(magnitud1)
                 plt.ylabel(magnitud2)
-                plt.savefig('Ajuste archivo grande para m=1 sin outliers y con error.png')
+                title4='Conerrores_y_sinoutliers_de_archivoconjutode_' + self.nombre1+ '_y_'  + self.nombre2
+                plt.savefig(title4+'.png')
 
         
                 
