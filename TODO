@@ -1,0 +1,23 @@
+1) Ejercicio de git, acabo de hacer un commit con cambios en Fotometria. Podrias saber lo que he cambiado?
+
+2) Corrige el flujo, la ecuación está mal despejada.
+
+3) en el flujo, pon una condicion, que pida si queremos el flujo en cgs o en jansky. Si es en cgs, es como te mostré, si es en jansky, seria: self.flux = 10**((self.Extraer_columna(MAG[0])-8.9)/-2.5). El error en ambos casos es igual
+
+4) En astrometria, una nueva funcion, que haga un plot, como la figura 2 en https://www.eso.org/sci/observing/phase3/data_releases/viking_dr2.pdf donde Dra y Ddec es la diferencia de RA y DEC respectivamente del catalogo con el match.
+
+5) en catalogo, crear una nueva propiedad: self.healpix = False
+
+6) en catalogo, crear una funcion que calcule el area espacial, en funcion de ramin, ramax, decmin, decmax. Basicamente, dadas las esquinas de un cuadrado en geometría esferoca, cual es su area? Ala = ) A buscar como hacerlo!
+ 
+7) Una funcion que haga correccion fotometrica por extinction en flujos, si necesario (esto te daré mas instrucciones)
+
+8) Separar librerias de instancias. Crear un archivo catalogo.py con solo el catalogo. otro archivo astrometria.py con lo de astrometria y otro fotometria.py con fotometria. Despues, creas otro archivo donde haras import catalogo etcetera, y desde hay haras las instancias.
+
+9) Crear clase photoz (lo basico, que dependa por ahora de un archivo, que sera el archivo que creamos anteriormente)
+
+
+(tareas para Aurelio): Crear funcion en astrometria para hacer distribucion de healpix y otra en catalogo que haga el histograma healpix
+
+
+

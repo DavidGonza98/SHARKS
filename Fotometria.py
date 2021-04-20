@@ -117,7 +117,11 @@ class Catalogo():
                 nombres.append(name)
             
             self.datos= Table(data=arrays, names=nombres)
-            
+
+            if self.RA2 in self.assoc1.columns:
+                self.RA2 += '_'+self.nombreMatch
+            if self.DEC2 in self.assoc1.columns:
+                self.DEC2 += '_'+self.nombreMatch
             #print(self.datos.columns)
                           
         else:
@@ -214,6 +218,8 @@ class astrometria():
         self.ra2 = ObjectCatalog.RA2
         self.dec1 = ObjectCatalog.DEC
         self.dec2 = ObjectCatalog.DEC2
+        self.nombre = ObjectCatalog.nombre
+        self.nombreMatch = ObjectCatalog.nombreMatch
         ObjectCatalog.estado()
         #Lleno=False
         #self.matched=False
@@ -233,14 +239,14 @@ class astrometria():
                 self.cosgamma[i] = (mt.acos(self.gamma)*3600)
         return self.cosgamma
     
-    def Histograma(self, tipo, ObjectCatalog, ObjectCatalog1):
+    def Histograma(self, tipo):
     
         plt.figure(1)
         if tipo == 'Distancia angular':
             
             sns.displot(self.cosgamma, kde=True)
             plt.title('Histograma de distancia angular')
-            title='Histograma_Distancia_Angular' + ObjectCatalog.nombre+ '_y_'  + ObjectCatalog1.nombre
+            title='Histograma_Distancia_Angular' + self.nombre+ '_y_'  + self.nombreMatch
             plt.xlabel('Segundos de Arco')
             plt.savefig(title+'.png')
             
@@ -445,6 +451,9 @@ two_mass_fotometria.errorfunc('Kmag', 'APERMAG3', 'e_Kmag', two_mass, sharks_sgp
 des=Catalogo('DES', 'des_in_field.fits', 'RA', 'DEC')
 sharks_sgpe_des=Catalogo('Sharks_sgpe', 'sharks_sgpe.fits', 'RA', 'DEC')
 
+#PARA AURE des=Catalogo('DES', '/home/acarnero/sharks/dr1/suplement/des_in_field.fits', 'RA', 'DEC')
+#PARA AURE sharks_sgpe_des=Catalogo('Sharks_sgpe', '/home/acarnero/Documents/tfg/sharks_sgpe.fits', 'RA', 'DEC')
+
 sharks_sgpe_des.LeerArchivo()
 des.LeerArchivo()
 
@@ -454,11 +463,11 @@ des.estado()
 sharks_sgpe_des.Match(des)
  
 sharks_sgpe_des.MainCatalog()
-sharks_sgpe_des.saveSample(['COADD_OBJECT_ID', 'FLUX_AUTO_G', 'FLUXERR_AUTO_G', 'FLUX_AUTO_R', 'FLUXERR_AUTO_R', 'FLUX_AUTO_I', 'FLUXERR_AUTO_I', 'FLUX_AUTO_Z', 'FLUXERR_AUTO_Z', 'FLUX_AUTO_Y', 'FLUXERR_AUTO_Y', 'PETROFLUX', 'PETROFLUXERR', 'EBV_SFD98', 'MULTIFRAMEID', 'SEQNUM'])
-sharks_sgpe_des.createSample(format='fits', nameSample='sharks_des1')
+#sharks_sgpe_des.saveSample(['COADD_OBJECT_ID', 'FLUX_AUTO_G', 'FLUXERR_AUTO_G', 'FLUX_AUTO_R', 'FLUXERR_AUTO_R', 'FLUX_AUTO_I', 'FLUXERR_AUTO_I', 'FLUX_AUTO_Z', 'FLUXERR_AUTO_Z', 'FLUX_AUTO_Y', 'FLUXERR_AUTO_Y', 'PETROFLUX', 'PETROFLUXERR', 'EBV_SFD98', 'MULTIFRAMEID', 'SEQNUM'])
+#sharks_sgpe_des.createSample(format='fits', nameSample='sharks_des1')
 
-#sharks_sgpe_des_astrometria=astrometria(sharks_sgpe_des)
-#sharks_sgpe_des_astrometria.Distancia_Angular()
-#sharks_sgpe_des_astrometria.Histograma('Distancia angular', sharks_sgpe_des, des)
+sharks_sgpe_des_astrometria=astrometria(sharks_sgpe_des)
+sharks_sgpe_des_astrometria.Distancia_Angular()
+sharks_sgpe_des_astrometria.Histograma('Distancia angular')#, sharks_sgpe_des, des)
 
       
