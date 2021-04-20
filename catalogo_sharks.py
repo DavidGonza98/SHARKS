@@ -25,6 +25,7 @@ class Catalogo():
         self.radius= 1/3600.
         self.match=False
         self.mask=False
+        self.healpix = False
     
     def LeerArchivo(self):
         self.datos = Table.read(self.archivo, format= 'fits')
@@ -41,8 +42,7 @@ class Catalogo():
             print('No ha sido posible cargar los datos del catálogo ', self.nombre)
         
     def Extraer_columna(self, DameColumna):
-        self.nombres=[]
-        self.arrays=[]
+        
         if DameColumna in self.datos.keys():
             print('La columna', DameColumna, 'tiene una longitud de', len(self.datos[DameColumna]), 'un maximo de', np.max(self.datos[DameColumna]),'y un minimo de', np.min(self.datos[DameColumna]))
                          
@@ -70,15 +70,16 @@ class Catalogo():
             print('No ha sido posible cargar las lineas')
 
     def Match(self, ObjectCatalog):
-        print('hola')
+        
         if (self.Lleno) and self.nombre!=ObjectCatalog.nombre:
             ra1_matched=self.datos[self.RA]
             dec1_matched=self.datos[self.DEC]
             
             self.datos2 = ObjectCatalog.datos
             self.RA2 = ObjectCatalog.RA
-            ra2_matched=self.datos2[ObjectCatalog.RA]
-            dec2_matched=self.datos2[ObjectCatalog.DEC]
+            self.DEC2 = ObjectCatalog.DEC
+            ra2_matched=self.datos2[self.RA2]
+            dec2_matched=self.datos2[self.DEC2]
             #print('La longitud de', self.RA, 'es', len(ra1_matched), 'y la de', self.DEC, 'es', len(dec1_matched) )
             #print('La longitud de', ObjectCatalog[2], 'es', len(ra2_matched), 'y la de', ObjectCatalog[3], 'es', len(dec2_matched), 'donde estos datos pertenecen al catalogo', ObjectCatalog[0])
             self.matches = smatch.match(ra1_matched, dec1_matched, self.radius, ra2_matched, dec2_matched, nside=self.nside, maxmatch=self.maxmatch)
@@ -87,10 +88,6 @@ class Catalogo():
             self.assoc2 = self.datos2[self.matches['i2']]
 
 
-#            self.ra1_matched= self.ra1 [self.matches['i1']]
-#            self.dec1_matched= self.dec1 [self.matches['i1']]
-#            self.ra2_matched= self.ra2 [self.matches['i2']]
-#            self.dec2_matched= self.dec2 [self.matches['i2']]
             print('La longitud del catalogo ya habiendo realizado el matched es', len(self.assoc1))
             self.match=True
             self.nombreMatch = ObjectCatalog.nombre 
@@ -102,18 +99,27 @@ class Catalogo():
     def MainCatalog (self):
         nombres=[]
         arrays=[]
+        
         if self.match:
             
             for name in self.assoc1.columns:
                 nombres.append(name)
                 arrays.append(self.assoc1[name])
-        
-            for name in self.assoc2.columns:
-                nombres.append(name)
-                arrays.append(self.assoc2[name])
-        
-            self.datos= Table(data=arrays, names=nombres)  
             
+            for name in self.assoc2.columns:
+                arrays.append(self.assoc2[name])
+                if name in nombres:
+                    name= name+'_'+self.nombreMatch
+                nombres.append(name)
+            
+            self.datos= Table(data=arrays, names=nombres)
+
+            if self.RA2 in self.assoc1.columns:
+                self.RA2 += '_'+self.nombreMatch
+            if self.DEC2 in self.assoc1.columns:
+                self.DEC2 += '_'+self.nombreMatch
+            #print(self.datos.columns)
+                          
         else:
             print('No se ha podido unificar')
         
@@ -161,80 +167,53 @@ class Catalogo():
         else:
             print('File not read')
         
-    def createSample(self, listasColumnas, format='fits', nameSample='mysample'):
-        #format puede ser csv, ascii o fits
-        
-        #['MAG_AUTO','MAGERR_AUTO','ALPHA_J2000','DELTA_J2000']
+   
+    def saveSample(self, listasColumnas):
         nombres=[]
         arrays=[]
         for name in listasColumnas:
             nombres.append(name)
             arrays.append(self.datos[name])
-            
-        t= Table(data=arrays, names=nombres)
+       
+        self.t= Table(data=arrays, names=nombres)
+   
+    def createSample(self,format='fits', nameSample='mysample'):
+        #format puede ser csv, ascii o fits
+        
             
         if format=='fits':
-            t.write(nameSample+'.fits')
+            self.t.write(nameSample+'.fits')
 
         else:            
-            ascii.write(t, format=format, output=nameSample+'.'+format, overwrite=True)
+            ascii.write(self.t, format=format, output=nameSample+'.'+format, overwrite=True)
         
-    def giveFluxes(self, MAG):
-        from astropy.table import Column
+    def giveFluxes(self, MAG, tipo):
         
-        flux= 10**((48.6 - (self.Extraer_columna(MAG[0])))/2.5)
+        if tipo =='cgs':
+            
+            flux= 10**((-48.6 - (self.Extraer_columna(MAG[0])))/2.5)
 
-        fluxerr=self.Extraer_columna(MAG[1]) * flux/1.086
+            fluxerr=self.Extraer_columna(MAG[1])*flux/1.086
         
-        print('El valor del flujo es', flux,'y del error',fluxerr)
-        self.datos['FLUX_'+MAG[0]] = flux
+            print('El valor del flujo es', flux,'y del error',fluxerr)
+            self.datos['FLUX_'+MAG[0]] = flux
         
-        self.datos['FLUXERR_'+MAG[0]] = fluxerr 
+            self.datos['FLUXERR_'+MAG[0]] = fluxerr 
+            
+        elif tipo== 'jansky':
+            
+            self.flux = 10**((self.Extraer_columna(MAG[0])+8.9)/-2.5)
+            
+            fluxerr=self.Extraer_columna(MAG[1])*flux/1.086
+            
+            print('El valor del flujo es', flux,'y del error',fluxerr)
+            self.datos['FLUX_'+MAG[0]] = flux
+        
+            self.datos['FLUXERR_'+MAG[0]] = fluxerr
+        
+        else:
+            print('El tipo de flujo introducido es incorrecto')
 
         
         
            
-sharks=Catalogo('Sharks', 'Sharks_sgp_e_2_cat_small.fits', 'ALPHA_J2000', 'DELTA_J2000')
-
-
-sharks.LeerArchivo()
-#ra = sharks.Extraer_columna('ALPHA_J2000')
-sharks.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
-
-sharks.estado()
-
-twomass = Catalogo('2mass', '2mass.fit', 'RAJ2000', 'DEJ2000')
-twomass.LeerArchivo()
-twomass.estado()
-
-sharks.Match(twomass)
-sharks.giveFluxes(['MAG_AUTO','MAGERR_AUTO'])
-#sharks.createSample(['MAG_AUTO','MAGERR_AUTO','FLUX_MAG_AUTO','FLUXERR_MAG_AUTO'],nameSample='sharks_twomass')
-'''
-sharks.Extraer_columna('MAG_AUTO')
-
-
-print('Despues de mascarar', len(sharks.datos))
-
-
-sharks.Match(['2mass', '2mass.fit', 'RAJ2000', 'DEJ2000'])
-sharks.MainCatalog()
-
-sharks.createSample('MAG_AUTO','MAGERR_AUTO')
-
-
-#t= Table([sharks.Extraer_columna('MAG_AUTO'), sharks.Extraer_columna('MAGERR_AUTO')])
-
-#ascii.write(t, format='csv', output='Documento')
-
-
-#TAREA!
-#modifcar la funcion createSample.
-#Crear archivo en vormato fits, otro en formato csv y otro en formato ascii
-'''      
-        
-        
-        
-        
-        
-        
