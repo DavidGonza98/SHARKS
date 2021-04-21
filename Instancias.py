@@ -101,20 +101,20 @@ sharks_sgpe_des=catalogo_sharks.Catalogo('Sharks_sgpe', 'sharks_sgpe.fits', 'RA'
 sharks_sgpe_des.LeerArchivo()
 des.LeerArchivo()
 
-sharks_sgpe_des.estado()
-des.estado()
 
 sharks_sgpe_des.Match(des)
  
 sharks_sgpe_des.MainCatalog()
 #sharks_sgpe_des.saveSample(['COADD_OBJECT_ID', 'FLUX_AUTO_G', 'FLUXERR_AUTO_G', 'FLUX_AUTO_R', 'FLUXERR_AUTO_R', 'FLUX_AUTO_I', 'FLUXERR_AUTO_I', 'FLUX_AUTO_Z', 'FLUXERR_AUTO_Z', 'FLUX_AUTO_Y', 'FLUXERR_AUTO_Y', 'PETROFLUX', 'PETROFLUXERR', 'EBV_SFD98', 'MULTIFRAMEID', 'SEQNUM'])
 #sharks_sgpe_des.createSample(format='fits', nameSample='sharks_des1')
+sharks_sgpe_des.estado()
+sharks_sgpe_des.AreaEspacial()
 
 sharks_sgpe_des_astrometria=astrometria_poo.astrometria(sharks_sgpe_des)
 sharks_sgpe_des_astrometria.Distancia_Angular()
 #sharks_sgpe_des_astrometria.Histograma('Distancia angular')#, sharks_sgpe_des, des)
 sharks_sgpe_des_astrometria.DefineVariables()
-sharks_sgpe_des_astrometria.AreaEspacial()
+
 sharks_sgpe_des_astrometria.plot()
 
 

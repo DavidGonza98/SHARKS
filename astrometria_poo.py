@@ -36,18 +36,7 @@ class astrometria():
         self.ra1_matched=self.datos[self.ra1]
         self.dec1_matched=self.datos[self.dec1]
     
-    def AreaEspacial(self):
-        
-        lado_menor1=np.max(self.ra1_matched) - np.min(self.ra1_matched)
-        lado_mayor1=np.max(self.dec1_matched) - np.min(self.dec1_matched)
-        self.area1= lado_menor1*lado_mayor1 
-        
-        lado_menor2=np.max(self.ra2_matched) - np.min(self.ra2_matched)
-        lado_mayor2=np.max(self.dec2_matched) - np.min(self.dec2_matched)
-        self.area2= lado_menor2*lado_mayor2 
-        
-        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1*3600,'segundos de arco y el area del catalogo '+self.nombreMatch+' es',self.area2*3600, 'segundos de arco')
-    
+       
     
     def Distancia_Angular(self):
         #sharks.Match(self.datos)
@@ -79,6 +68,7 @@ class astrometria():
         dra=self.ra1_matched-self.ra2_matched
         ddec=self.dec1_matched-self.dec2_matched
         plt.plot(dra, ddec, '.')
+        plt.plot(0,0, 'r+')
         plt.xlabel('dRA [arcsec]')
         plt.ylabel('dDEC [arcsec]')
         title= self.nombre+ '-'  + self.nombreMatch+' pos offsets'

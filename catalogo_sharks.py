@@ -9,6 +9,7 @@ from astropy.table import Table
 import numpy as np
 from astropy.io import ascii
 import smatch
+import math as mt
 
 class Catalogo():
     
@@ -16,7 +17,7 @@ class Catalogo():
         self.nombre= nombre
         self.archivo= archivo
         
-        self.lineas=False
+        #self.lineas=False
         self.Lleno=False
         self.RA=RA
         self.DEC=DEC
@@ -32,7 +33,7 @@ class Catalogo():
 
         self.Lleno=True
         
-        if (self.Lleno):
+        if self.Lleno:
             self.area= np.shape(self.datos)
             self.longitud= len(self.datos)
             print('El catálogo ',self.nombre,' se ha cargado correctamente')
@@ -52,37 +53,20 @@ class Catalogo():
             print ('El nombre de la columna ingresada no se encuentra en el catalogo', self.nombre)
 
 
-
-    def estado(self):
-        self.linea=True
-        if self.linea:
-            #print(describa si ha sido leido o no, se se ha hecho un match o no
-            #el numero de lineas), si he hecho una mascara
-            #si hay match, print del nombre que hemos hecho
-            print('La linea se ha cargado correctamente')
-            
-            self.Extraer_columna(self.RA)
-            self.Extraer_columna(self.DEC)
-           
-            
-            
-        else:
-            print('No ha sido posible cargar las lineas')
-
     def Match(self, ObjectCatalog):
-        
-        if (self.Lleno) and self.nombre!=ObjectCatalog.nombre:
-            ra1_matched=self.datos[self.RA]
-            dec1_matched=self.datos[self.DEC]
+        self.match=True
+        if self.Lleno and self.nombre!=ObjectCatalog.nombre:
+            self.ra1_matched=self.datos[self.RA]
+            self.dec1_matched=self.datos[self.DEC]
             
             self.datos2 = ObjectCatalog.datos
             self.RA2 = ObjectCatalog.RA
             self.DEC2 = ObjectCatalog.DEC
-            ra2_matched=self.datos2[self.RA2]
-            dec2_matched=self.datos2[self.DEC2]
+            self.ra2_matched=self.datos2[self.RA2]
+            self.dec2_matched=self.datos2[self.DEC2]
             #print('La longitud de', self.RA, 'es', len(ra1_matched), 'y la de', self.DEC, 'es', len(dec1_matched) )
             #print('La longitud de', ObjectCatalog[2], 'es', len(ra2_matched), 'y la de', ObjectCatalog[3], 'es', len(dec2_matched), 'donde estos datos pertenecen al catalogo', ObjectCatalog[0])
-            self.matches = smatch.match(ra1_matched, dec1_matched, self.radius, ra2_matched, dec2_matched, nside=self.nside, maxmatch=self.maxmatch)
+            self.matches = smatch.match(self.ra1_matched, self.dec1_matched, self.radius, self.ra2_matched, self.dec2_matched, nside=self.nside, maxmatch=self.maxmatch)
             
             self.assoc1 = self.datos[self.matches['i1']]
             self.assoc2 = self.datos2[self.matches['i2']]
@@ -96,6 +80,21 @@ class Catalogo():
         else:
             print('No se ha podido hacer el match')
             
+    
+       
+    
+    def AreaEspacial(self):
+        
+        lado_menor1=np.max(self.ra1_matched) - np.min(self.ra1_matched)
+        lado_mayor1=mt.sin(np.max(self.dec1_matched)) - mt.sin(np.min(self.dec1_matched))
+        self.area1= (180/mt.pi)*lado_menor1*lado_mayor1 
+        
+        lado_menor2=np.max(self.ra2_matched) - np.min(self.ra2_matched)
+        lado_mayor2=mt.sin(np.max(self.dec2_matched)) - mt.sin(np.min(self.dec2_matched))
+        self.area2= (180/mt.pi)*lado_menor2*lado_mayor2 
+        
+        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1*3600,'grados cuadrados y el area del catalogo '+self.nombreMatch+' es',self.area2*3600, 'grados cuadrados')
+
     def MainCatalog (self):
         nombres=[]
         arrays=[]
@@ -213,6 +212,30 @@ class Catalogo():
         
         else:
             print('El tipo de flujo introducido es incorrecto')
+            
+    def estado(self):
+        #self.linea=True
+        self.match=True
+        self.Lleno=True
+        self.mask=True
+        if self.Lleno:
+            
+            print('El catalogo '+self.nombre+' se ha cargado correctamente')
+            
+            if  self.match:
+                print('Se ha realizado correctamente el match entre los catalogos '+self.nombre+' y '+self.nombreMatch)
+                
+            else:
+                print ('No se ha podido realizar el match entre los catalogos '+self.nombre+' y '+self.nombreMatch)
+            
+            if self.mask:
+                print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area del catalogo ',self.area)
+                
+            else:
+                print('No se ha podido realizar la mascara correctamente')
+            
+        else:
+            print('No ha sido posible leer el catalogo '+self.nombre+' correctamente')
 
         
         
