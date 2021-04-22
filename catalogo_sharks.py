@@ -85,15 +85,17 @@ class Catalogo():
     
     def AreaEspacial(self):
         
-        lado_menor1=np.max(self.ra1_matched) - np.min(self.ra1_matched)
-        lado_mayor1=mt.sin(np.max(self.dec1_matched)) - mt.sin(np.min(self.dec1_matched))
+        lado_menor1=np.max(self.datos[self.RA]) - np.min(self.datos[self.RA])
+        lado_mayor1=mt.sin(np.max(self.datos[self.DEC])*mt.pi/180) - mt.sin(np.min(self.datos[self.DEC])*mt.pi/180)
         self.area1= (180/mt.pi)*lado_menor1*lado_mayor1 
         
+        '''
         lado_menor2=np.max(self.ra2_matched) - np.min(self.ra2_matched)
-        lado_mayor2=mt.sin(np.max(self.dec2_matched)) - mt.sin(np.min(self.dec2_matched))
+        lado_mayor2=mt.sin(np.max(self.dec2_matched)*mt.pi/180) - mt.sin(np.min(self.dec2_matched)*mt.pi/180)
         self.area2= (180/mt.pi)*lado_menor2*lado_mayor2 
+        '''
         
-        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1,'grados cuadrados y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
+        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1)#,'grados cuadrados y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
 
     def MainCatalog (self):
         nombres=[]
