@@ -67,7 +67,7 @@ class astrometria():
         
         dra=self.ra1_matched-self.ra2_matched
         ddec=self.dec1_matched-self.dec2_matched
-        plt.plot(dra, ddec, '.')
+        plt.plot(dra*3600, ddec*3600, '.')
         plt.plot(0,0, 'r+')
         plt.xlabel('dRA [arcsec]')
         plt.ylabel('dDEC [arcsec]')

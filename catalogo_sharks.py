@@ -93,7 +93,7 @@ class Catalogo():
         lado_mayor2=mt.sin(np.max(self.dec2_matched)) - mt.sin(np.min(self.dec2_matched))
         self.area2= (180/mt.pi)*lado_menor2*lado_mayor2 
         
-        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1*3600,'grados cuadrados y el area del catalogo '+self.nombreMatch+' es',self.area2*3600, 'grados cuadrados')
+        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1,'grados cuadrados y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
 
     def MainCatalog (self):
         nombres=[]
