@@ -12,21 +12,28 @@ dec
 
 2) En catalogo crear una funcion que corrija flujos y magnitudes (y sus errores) por extinction
 
-	rv_pars = {'DES':{'g':3.186, 'r':2.14, 'i':1.569, 'z':1.196, 'y':1.048},'SHARKS':{'Ks':0.308}}
+	def correctExtinction(self,nombre_mag,flujo_o_mag,banda):
 
-	if mag <90 and mag>0:
-		mag_corrected = mag - rv_pars * EBV
-		magerr_corrected = magerr
-	else:
-		mag_corrected = mag
-		magerr_corrected = magerr
+		rv_pars = {'g':3.186, 'r':2.14, 'i':1.569, 'z':1.196, 'y':1.048, 'Ks':0.308}
+		
+		EBV = self.datos['EBV_SFD98']
 
-	if flux>0:
-		flux_corrected = flux * 10**(rv_pars/2.5)
-		fluxerr_corrected = fluxerr * 10**(rv_pars/2.5)
-	else:
-		flux_corrected = flux
-		fluxerr_corrected = fluxerr
+		if flujo_o_mag == 'mag':
+			mag_corrected = self.datos[nombre_mag[0]] - rv_pars[banda] * EBV
+			magerr_corrected = self.datos[nombre_mag[1]]
+
+		elif flujo_o_mag == 'flux':
+			flux_corrected = self.datos[nombre_mag[0]] * 10**(rv_pars[banda] * EBV/2.5)
+			fluxerr_corrected = self.datos[nombre_mag[1]] * 10**(rv_pars[banda] * EBV/2.5)
+
+		nombre asociado a esse array y lo añades a self.datos
+
+correctExtinction(['FLUX_AUTO_G','FLUXERR_AUTO_G'],'mag','g')
+correctExtinction(['FLUX_AUTO_R','FLUXERR_AUTO_R'],'mag','r')
+correctExtinction(['FLUX_AUTO_I','FLUXERR_AUTO_I'],'mag','i')
+correctExtinction(['FLUX_AUTO_Z','FLUXERR_AUTO_Z'],'mag','z')
+correctExtinction(['FLUX_AUTO_Y','FLUXERR_AUTO_Y'],'mag','y')
+correctExtinction(['FLUX_APER','FLUXERR_APER'],'flux','Ks')
 
 3) Correr jupyter de ejemplo de eazy-py
 
@@ -35,5 +42,5 @@ dec
 5) 
 	Crear un archivo en formato ascii con sharks y des con las columnas siguientes (las de flujo y error estan corregidas como te explico arriba!!): 
 
-	COADD_OBJECT_ID FLUX_AUTO_G_CORRECTED FLUXERR_AUTO_G_CORRECTED FLUX_AUTO_R_CORRECTED FLUXERR_AUTO_R_CORRECTED FLUX_AUTO_I_CORRECTED FLUXERR_AUTO_I_CORRECTED FLUX_AUTO_Z_CORRECTED FLUXERR_AUTO_Z_CORRECTED FLUX_AUTO_Y_CORRECTED FLUXERR_AUTO_Y_CORRECTED KRONFLUX_CORRECTED KRONFLUXERR_CORRECTED
+	COADD_OBJECT_ID FLUX_AUTO_G_CORRECTED FLUXERR_AUTO_G_CORRECTED FLUX_AUTO_R_CORRECTED FLUXERR_AUTO_R_CORRECTED FLUX_AUTO_I_CORRECTED FLUXERR_AUTO_I_CORRECTED FLUX_AUTO_Z_CORRECTED FLUXERR_AUTO_Z_CORRECTED FLUX_AUTO_Y_CORRECTED FLUXERR_AUTO_Y_CORRECTED FLUX_APER_CORRECTED FLUXERR_APER_CORRECTED
 
