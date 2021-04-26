@@ -1,23 +1,46 @@
-1) Ejercicio de git, acabo de hacer un commit con cambios en Fotometria. Podrias saber lo que he cambiado?
-
-2) Corrige el flujo, la ecuación está mal despejada.
-
-3) en el flujo, pon una condicion, que pida si queremos el flujo en cgs o en jansky. Si es en cgs, es como te mostré, si es en jansky, seria: self.flux = 10**((self.Extraer_columna(MAG[0])-8.9)/-2.5). El error en ambos casos es igual
-
-4) En astrometria, una nueva funcion, que haga un plot, como la figura 2 en https://www.eso.org/sci/observing/phase3/data_releases/viking_dr2.pdf donde Dra y Ddec es la diferencia de RA y DEC respectivamente del catalogo con el match.
-
-5) en catalogo, crear una nueva propiedad: self.healpix = False
-
-6) en catalogo, crear una funcion que calcule el area espacial, en funcion de ramin, ramax, decmin, decmax. Basicamente, dadas las esquinas de un cuadrado en geometría esferoca, cual es su area? Ala = ) A buscar como hacerlo!
- 
-7) Una funcion que haga correccion fotometrica por extinction en flujos, si necesario (esto te daré mas instrucciones)
-
-8) Separar librerias de instancias. Crear un archivo catalogo.py con solo el catalogo. otro archivo astrometria.py con lo de astrometria y otro fotometria.py con fotometria. Despues, creas otro archivo donde haras import catalogo etcetera, y desde hay haras las instancias.
-
-9) Crear clase photoz (lo basico, que dependa por ahora de un archivo, que sera el archivo que creamos anteriormente)
-
 
 (tareas para Aurelio): Crear funcion en astrometria para hacer distribucion de healpix y otra en catalogo que haga el histograma healpix
 
 
+1) Crea una opción, que si el plot2D, pueda pesar el color de cada punto por (usar seaborn.jointplot en scatter, variando el color en funcion de las siguientes variables): 
+X - max/2 
+Y - max/2
+l
+b
+ra
+dec
+
+2) En catalogo crear una funcion que corrija flujos y magnitudes (y sus errores) por extinction
+
+	def correctExtinction(self,nombre_mag,flujo_o_mag,banda):
+
+		rv_pars = {'g':3.186, 'r':2.14, 'i':1.569, 'z':1.196, 'y':1.048, 'Ks':0.308}
+		
+		EBV = self.datos['EBV_SFD98']
+
+		if flujo_o_mag == 'mag':
+			mag_corrected = self.datos[nombre_mag[0]] - rv_pars[banda] * EBV
+			magerr_corrected = self.datos[nombre_mag[1]]
+
+		elif flujo_o_mag == 'flux':
+			flux_corrected = self.datos[nombre_mag[0]] * 10**(rv_pars[banda] * EBV/2.5)
+			fluxerr_corrected = self.datos[nombre_mag[1]] * 10**(rv_pars[banda] * EBV/2.5)
+
+		nombre asociado a esse array y lo añades a self.datos
+
+correctExtinction(['FLUX_AUTO_G','FLUXERR_AUTO_G'],'mag','g')
+correctExtinction(['FLUX_AUTO_R','FLUXERR_AUTO_R'],'mag','r')
+correctExtinction(['FLUX_AUTO_I','FLUXERR_AUTO_I'],'mag','i')
+correctExtinction(['FLUX_AUTO_Z','FLUXERR_AUTO_Z'],'mag','z')
+correctExtinction(['FLUX_AUTO_Y','FLUXERR_AUTO_Y'],'mag','y')
+correctExtinction(['FLUX_APER','FLUXERR_APER'],'flux','Ks')
+
+3) Correr jupyter de ejemplo de eazy-py
+
+4) cambiar self.area1 por self.area
+
+5) 
+	Crear un archivo en formato ascii con sharks y des con las columnas siguientes (las de flujo y error estan corregidas como te explico arriba!!): 
+
+	COADD_OBJECT_ID FLUX_AUTO_G_CORRECTED FLUXERR_AUTO_G_CORRECTED FLUX_AUTO_R_CORRECTED FLUXERR_AUTO_R_CORRECTED FLUX_AUTO_I_CORRECTED FLUXERR_AUTO_I_CORRECTED FLUX_AUTO_Z_CORRECTED FLUXERR_AUTO_Z_CORRECTED FLUX_AUTO_Y_CORRECTED FLUXERR_AUTO_Y_CORRECTED FLUX_APER_CORRECTED FLUXERR_APER_CORRECTED
 
