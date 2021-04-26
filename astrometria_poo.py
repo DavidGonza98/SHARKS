@@ -63,20 +63,27 @@ class astrometria():
         elif tipo == 'Jointplot':
             return sns.jointplot(x=self.KMAG, y=self.MAG_AUTO, kind="reg", truncate=False, xlim=(5, 25), ylim=(5, 25), color="m", height=7)
         
-    def plot(self):
+    def plot(self, tipo):
         
         dra=self.ra1_matched-self.ra2_matched
         ddec=self.dec1_matched-self.dec2_matched
-        plt.plot(dra*3600, ddec*3600, '.')
+        #plt.plot(dra*3600, ddec*3600, '.')
         plt.plot(0,0, 'r+')
-        plt.xlabel('dRA [arcsec]')
-        plt.ylabel('dDEC [arcsec]')
-        title= self.nombre+ '-'  + self.nombreMatch+' pos offsets'
-        plt.title(title)
-        plt.savefig(title+'.png')     
         
-        
-        
+        if tipo=='X' or tipo=='Y':
+            plt.scatter(dra*3600, ddec*3600, c= self.datos[tipo]- np.max(self.datos[tipo])/2)
+            plt.xlabel('dRA [arcsec]')
+            plt.ylabel('dDEC [arcsec]')
+            title= self.nombre+ '-'  + self.nombreMatch+' pos offsets'
+            plt.title(title)
+            plt.savefig(title+'.png')     
+        else:
+            plt.scatter(dra*3600, ddec*3600, c= self.datos[tipo])
+            plt.xlabel('dRA [arcsec]')
+            plt.ylabel('dDEC [arcsec]')
+            title= self.nombre+ '-'  + self.nombreMatch+' pos offsets'
+            plt.title(title)
+            plt.savefig(title+'.png')    
         
         
         

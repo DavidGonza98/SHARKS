@@ -34,11 +34,10 @@ class Catalogo():
         self.Lleno=True
         
         if self.Lleno:
-            self.area= np.shape(self.datos)
-            self.longitud= len(self.datos)
-            print('El catálogo ',self.nombre,' se ha cargado correctamente')
-            print('El área del catálogo es ', self.area, 'y el número de objetos será ', self.longitud )
             
+            self.longitud= len(self.datos)
+            print('El catálogo ',self.nombre,' se ha cargado correctamente y el número de objetos será ', self.longitud)
+                        
         else:
             print('No ha sido posible cargar los datos del catálogo ', self.nombre)
         
@@ -95,7 +94,7 @@ class Catalogo():
         self.area2= (180/mt.pi)*lado_menor2*lado_mayor2 
         '''
         
-        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1)#,'grados cuadrados y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
+        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1,'grados cuadrados')# y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
 
     def MainCatalog (self):
         nombres=[]
@@ -215,11 +214,54 @@ class Catalogo():
         else:
             print('El tipo de flujo introducido es incorrecto')
             
+    
+    def correctExtinction (self, nombre_mag, flujo_o_mag, banda):
+        
+        rv_pars = {'G': 3.186, 'R': 2.14, 'I': 1.569, 'Z': 1.196, 'Y': 1.048, 'Ks': 0.308}
+        
+        EBV = self.datos['EBV_SFD98']
+        
+        if flujo_o_mag == 'mag':
+            mag_corrected = self.datos[nombre_mag[0]] - rv_pars[banda] * EBV
+            magerr_corrected = self.datos[nombre_mag[1]]
+            if banda == 'Ks':
+                
+                self.datos['FLUX_APER_CORRECTED']= mag_corrected
+                self.datos['FLUXERR_APER_CORRECTED']= magerr_corrected
+                
+            else:
+                self.datos['FLUX_AUTO_'+banda+'_CORRECTED']= mag_corrected
+                self.datos['FLUXERR_AUTO_'+banda+'_CORRECTED']= magerr_corrected
+                
+                               
+                
+                '''
+                self.datos['MAG_APER_CORRECTED']=mag_corrected
+                self.datos['MAGERR_APER_CORRECTED']=magerr_corrected
+                
+            else:
+                self.datos['MAG_AUTO_'+banda+'_CORRECTED']= mag_corrected
+                self.datos['MAGERR_AUTO_'+banda+'_CORRECTED']= magerr_corrected
+            '''
+            
+        elif flujo_o_mag == 'flux':
+            flux_corrected = self.datos[nombre_mag[0]] * 10**(rv_pars[banda] * EBV/2.5)
+            fluxerr_corrected = self.datos[nombre_mag[1]] * 10**(rv_pars[banda] * EBV/2.5)
+            if banda== 'Ks':
+                self.datos['FLUX_APER_CORRECTED']= flux_corrected
+                self.datos['FLUXERR_APER_CORRECTED']= fluxerr_corrected
+                
+            else:
+                self.datos['FLUX_AUTO_'+banda+'_CORRECTED']= flux_corrected
+                self.datos['FLUXERR_AUTO_'+banda+'_CORRECTED']= fluxerr_corrected
+        	
+    
     def estado(self):
         #self.linea=True
         self.match=True
         self.Lleno=True
         self.mask=True
+        self.area= np.shape(self.datos)
         if self.Lleno:
             
             print('El catalogo '+self.nombre+' se ha cargado correctamente')
