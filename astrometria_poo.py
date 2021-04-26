@@ -10,7 +10,7 @@ import numpy as np
 import smatch
 import math as mt
 import seaborn as sns
-import pylab as plt
+import matplotlib.pyplot as plt
 from scipy import optimize, stats
 import pandas as pd
 
@@ -64,24 +64,28 @@ class astrometria():
             return sns.jointplot(x=self.KMAG, y=self.MAG_AUTO, kind="reg", truncate=False, xlim=(5, 25), ylim=(5, 25), color="m", height=7)
         
     def plot(self, tipo):
-        
+        plt.clf()
         dra=self.ra1_matched-self.ra2_matched
         ddec=self.dec1_matched-self.dec2_matched
         #plt.plot(dra*3600, ddec*3600, '.')
         plt.plot(0,0, 'r+')
         
         if tipo=='X' or tipo=='Y':
-            plt.scatter(dra*3600, ddec*3600, c= self.datos[tipo]- np.max(self.datos[tipo])/2)
+            sc=plt.scatter(dra*3600, ddec*3600, c= self.datos[tipo]- np.max(self.datos[tipo])/2)
+            cbar=plt.colorbar(sc)
+            cbar.set_label(tipo, rotation=270)
             plt.xlabel('dRA [arcsec]')
             plt.ylabel('dDEC [arcsec]')
-            title= self.nombre+ '-'  + self.nombreMatch+' pos offsets'
+            title= self.nombre+ '-'  + self.nombreMatch+' pos offsets of '+ tipo
             plt.title(title)
             plt.savefig(title+'.png')     
         else:
-            plt.scatter(dra*3600, ddec*3600, c= self.datos[tipo])
+            sc=plt.scatter(dra*3600, ddec*3600, c= self.datos[tipo])
+            cbar=plt.colorbar(sc)
+            cbar.set_label(tipo, rotation=270)
             plt.xlabel('dRA [arcsec]')
             plt.ylabel('dDEC [arcsec]')
-            title= self.nombre+ '-'  + self.nombreMatch+' pos offsets'
+            title= self.nombre+ '-'  + self.nombreMatch+' pos offsets of ' +tipo
             plt.title(title)
             plt.savefig(title+'.png')    
         

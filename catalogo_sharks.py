@@ -226,12 +226,12 @@ class Catalogo():
             magerr_corrected = self.datos[nombre_mag[1]]
             if banda == 'Ks':
                 
-                self.datos['FLUX_APER_CORRECTED']= mag_corrected
-                self.datos['FLUXERR_APER_CORRECTED']= magerr_corrected
+                self.datos['APERMAG3_CORRECTED']= mag_corrected
+                self.datos['APERMAG3ERR_CORRECTED']= magerr_corrected
                 
             else:
-                self.datos['FLUX_AUTO_'+banda+'_CORRECTED']= mag_corrected
-                self.datos['FLUXERR_AUTO_'+banda+'_CORRECTED']= magerr_corrected
+                self.datos['MAG_AUTO_'+banda+'_CORRECTED']= mag_corrected
+                self.datos['MAGERR_AUTO_'+banda+'_CORRECTED']= magerr_corrected
                 
                                
                 
