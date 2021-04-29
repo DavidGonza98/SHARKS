@@ -1,46 +1,19 @@
 
 (tareas para Aurelio): Crear funcion en astrometria para hacer distribucion de healpix y otra en catalogo que haga el histograma healpix
 
+1) FUNCION ESTADO EN CATALOGO!! COMO PUEDES PONER TODO A TRUE??? Eso lo leerá según el estado real de la instancia, aquí estás forzando para que siempre sea TRUE, independientemente de lo que hayamos hecho a la clase!!
 
-1) Crea una opción, que si el plot2D, pueda pesar el color de cada punto por (usar seaborn.jointplot en scatter, variando el color en funcion de las siguientes variables): 
-X - max/2 
-Y - max/2
-l
-b
-ra
-dec
+2) cambiar self.area1 por self.area!! Cuando hago un estado de catálogo, me sigue saliendo que:
 
-2) En catalogo crear una funcion que corrija flujos y magnitudes (y sus errores) por extinction
+print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area del catalogo ',self.area)
 
-	def correctExtinction(self,nombre_mag,flujo_o_mag,banda):
+(Esto es lo que no tiene sentido: self.area= np.shape(self.datos))
 
-		rv_pars = {'g':3.186, 'r':2.14, 'i':1.569, 'z':1.196, 'y':1.048, 'Ks':0.308}
-		
-		EBV = self.datos['EBV_SFD98']
+3) Running eazy-py
 
-		if flujo_o_mag == 'mag':
-			mag_corrected = self.datos[nombre_mag[0]] - rv_pars[banda] * EBV
-			magerr_corrected = self.datos[nombre_mag[1]]
+4) Documentation: 
+	https://www.pythonforthelab.com/blog/documenting-with-sphinx-and-readthedocs/
+	https://python-docs.readthedocs.io/en/latest/writing/documentation.html
+	https://brendanhasz.github.io/2019/01/05/sphinx.html
 
-		elif flujo_o_mag == 'flux':
-			flux_corrected = self.datos[nombre_mag[0]] * 10**(rv_pars[banda] * EBV/2.5)
-			fluxerr_corrected = self.datos[nombre_mag[1]] * 10**(rv_pars[banda] * EBV/2.5)
-
-		nombre asociado a esse array y lo añades a self.datos
-
-correctExtinction(['FLUX_AUTO_G','FLUXERR_AUTO_G'],'mag','g')
-correctExtinction(['FLUX_AUTO_R','FLUXERR_AUTO_R'],'mag','r')
-correctExtinction(['FLUX_AUTO_I','FLUXERR_AUTO_I'],'mag','i')
-correctExtinction(['FLUX_AUTO_Z','FLUXERR_AUTO_Z'],'mag','z')
-correctExtinction(['FLUX_AUTO_Y','FLUXERR_AUTO_Y'],'mag','y')
-correctExtinction(['FLUX_APER','FLUXERR_APER'],'flux','Ks')
-
-3) Correr jupyter de ejemplo de eazy-py
-
-4) cambiar self.area1 por self.area
-
-5) 
-	Crear un archivo en formato ascii con sharks y des con las columnas siguientes (las de flujo y error estan corregidas como te explico arriba!!): 
-
-	COADD_OBJECT_ID FLUX_AUTO_G_CORRECTED FLUXERR_AUTO_G_CORRECTED FLUX_AUTO_R_CORRECTED FLUXERR_AUTO_R_CORRECTED FLUX_AUTO_I_CORRECTED FLUXERR_AUTO_I_CORRECTED FLUX_AUTO_Z_CORRECTED FLUXERR_AUTO_Z_CORRECTED FLUX_AUTO_Y_CORRECTED FLUXERR_AUTO_Y_CORRECTED FLUX_APER_CORRECTED FLUXERR_APER_CORRECTED
 
