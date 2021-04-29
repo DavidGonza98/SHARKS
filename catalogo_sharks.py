@@ -53,7 +53,7 @@ class Catalogo():
 
 
     def Match(self, ObjectCatalog):
-        self.match=True
+        
         if self.Lleno and self.nombre!=ObjectCatalog.nombre:
             self.ra1_matched=self.datos[self.RA]
             self.dec1_matched=self.datos[self.DEC]
@@ -258,9 +258,9 @@ class Catalogo():
     
     def estado(self):
         #self.linea=True
-        self.match=True
-        self.Lleno=True
-        self.mask=True
+        
+        
+        
         self.area= np.shape(self.datos)
         if self.Lleno:
             
