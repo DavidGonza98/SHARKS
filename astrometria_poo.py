@@ -15,9 +15,25 @@ from scipy import optimize, stats
 import pandas as pd
 
 class astrometria():
+    """
+    Class to define the astrometry of the catalog.
+    """
     
     def __init__(self, ObjectCatalog):
-        print('hola')
+        """
+        Instantiate the astrometry of the catalog.
+
+        Parameters
+        ----------
+        ObjectCatalog : `str`
+            Name of the catalog we have defined before on catalogo_sharks.
+
+        Returns
+        -------
+        None.
+
+        """
+        
         self.datos = ObjectCatalog.datos
         self.ra1 = ObjectCatalog.RA
         self.ra2 = ObjectCatalog.RA2
@@ -30,6 +46,14 @@ class astrometria():
         
            
     def DefineVariables(self):
+        """
+        Define variables to differentiate RA and DEC from each catalog
+
+        Returns
+        -------
+        None.
+
+        """
         
         self.ra2_matched=self.datos[self.ra2]
         self.dec2_matched=self.datos[self.dec2]
@@ -39,7 +63,16 @@ class astrometria():
        
     
     def Distancia_Angular(self):
-        #sharks.Match(self.datos)
+        """
+        Angular distance
+
+        Returns
+        -------
+        `np.ndarray`
+            Angular distance.
+
+        """        
+        
         self.cosgamma = np.zeros(len(self.datos))
 
         
@@ -49,6 +82,19 @@ class astrometria():
         return self.cosgamma
     
     def Histograma(self, tipo):
+        """
+        Representate a histogram of tipo.
+
+        Parameters
+        ----------
+        tipo : `str`
+            String describing what histogram we want.
+
+        Returns
+        -------
+        None.
+
+        """
     
         plt.figure(1)
         if tipo == 'Distancia angular':
@@ -61,9 +107,22 @@ class astrometria():
             
         
         elif tipo == 'Jointplot':
-            return sns.jointplot(x=self.KMAG, y=self.MAG_AUTO, kind="reg", truncate=False, xlim=(5, 25), ylim=(5, 25), color="m", height=7)
+            sns.jointplot(x=self.KMAG, y=self.MAG_AUTO, kind="reg", truncate=False, xlim=(5, 25), ylim=(5, 25), color="m", height=7)
         
     def plot(self, tipo):
+        """
+        Method plotting the variable that is specified in tipo.
+
+        Parameters
+        ----------
+        tipo : `str`
+            String defining of what we want to plot.
+
+        Returns
+        -------
+        None.
+
+        """
         plt.clf()
         dra=self.ra1_matched-self.ra2_matched
         ddec=self.dec1_matched-self.dec2_matched

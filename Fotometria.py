@@ -16,14 +16,51 @@ import pandas as pd
 
 
 class fotometria():
+    """
+    Class to define the fotometry of the catalog.
+    """
     
     def __init__(self,ObjectCatalog):
+        """
+        Instantiate the fotometry of the catalog.
+
+        Parameters
+        ----------
+        ObjectCatalog : `str`
+            Name of the catalog we have defined before on catalogo_sharks.
+
+        Returns
+        -------
+        None.
+
+        """
         
         self.datos = ObjectCatalog.datos
                              
         
    
     def ajuste_lineal(self, magnitud1, magnitud2, ObjectCatalog, ObjectCatalog1, quitarOutliers=False):
+        """
+        Method that performs a linear adjustment of the parameters magnitud1 and magnitud2
+
+        Parameters
+        ----------
+        magnitud1 : `str`
+            X magnitude for the linear adjustment.
+        magnitud2 : `str`
+            Y magnitude for the linear adjustment.
+        ObjectCatalog : `str`
+            Catalog from which magnitud1 comes from.
+        ObjectCatalog1 : `str`
+            DESCRIPTION.
+        quitarOutliers : `bool`, optional
+            Catalog from which magnitud1 comes from.. The default is False.
+
+        Returns
+        -------
+        None.
+
+        """
         
         plt.figure(2)      
         self.p=plt.polyfit(self.datos[magnitud1], self.datos[magnitud2], 1)
@@ -42,6 +79,31 @@ class fotometria():
         
             
     def errorfunc(self, magnitud1, magnitud2, errormagnitud1, ObjectCatalog, ObjectCatalog1, quitarOutliers=False, pendienteuno=False):
+        """
+        Method that calculates the error function. Here we have needed from the library optimize the function leastsq to obtain m and b from the linear adjustmet including errors y=m*x+b.
+
+        Parameters
+        ----------
+        magnitud1 : `str`
+            X magnitude for the linear adjustment.
+        magnitud2 : `str`
+            Y magnitude for the linear adjustment.
+        errormagnitud1 : `str`
+            Error of magnitud1.
+        ObjectCatalog : `str`
+            Catalog from which magnitud1 comes from.
+        ObjectCatalog1 : `str`
+            Catalog from which magnitud2 comes from.
+        quitarOutliers : `bool`, optional
+            Here we decide if we want out of our linear adjustment the outliers. The default is False.
+        pendienteuno : `bool`, optional
+            Here we decide if we want to force the slope of the linear adjustment to be equal to 1. The default is False.
+
+        Returns
+        -------
+        None.
+
+        """
         
         fitfunc = lambda p, x: p[0] + p[1] * x
         errfunc = lambda p, x, y, err: (y - fitfunc(p, x)) / err

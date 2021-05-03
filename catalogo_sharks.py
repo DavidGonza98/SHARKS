@@ -13,11 +13,37 @@ import math as mt
 
 class Catalogo():
     
+    """
+     Class to define a Catalog.
+    """
+    
     def __init__(self, nombre, archivo, RA, DEC):
+        
+        """
+        Instantiate a Catalog.
+        
+        Parameters
+        ----------
+        
+        nombre: `int`
+            The name of our catalog.
+        archivo: `int`
+            The completely name to bring the catalog to our code.
+        RA: `int`
+            Name of the right ascension of our catalog.
+        DEC: `int` 
+            Name of the declination of our catalog.
+        
+        Returns
+        -------
+        
+                
+        
+        
+        
+        """
         self.nombre= nombre
         self.archivo= archivo
-        
-        #self.lineas=False
         self.Lleno=False
         self.RA=RA
         self.DEC=DEC
@@ -29,6 +55,16 @@ class Catalogo():
         self.healpix = False
     
     def LeerArchivo(self):
+        
+        """
+        With this method we start reading the catalog.
+        Also if we have read properly the catalog, we will print its length.
+        
+        Returns
+        -------
+        
+    
+        """
         self.datos = Table.read(self.archivo, format= 'fits')
 
         self.Lleno=True
@@ -43,6 +79,20 @@ class Catalogo():
         
     def Extraer_columna(self, DameColumna):
         
+        """
+        Here what the code does is to extract a column, which is specified in the parameter DameColumna.
+        
+        First, we detect if the parameter is in our catalog, and if it does, we print its length and its maximum and minimum.
+        
+        If not, the code prints that it can't find that column on our catalog.
+        
+        Parameter
+        ---------
+        DameColumna: `list`
+            Name of column from the catalog that we want to extract.
+                
+        """
+        
         if DameColumna in self.datos.keys():
             print('La columna', DameColumna, 'tiene una longitud de', len(self.datos[DameColumna]), 'un maximo de', np.max(self.datos[DameColumna]),'y un minimo de', np.min(self.datos[DameColumna]))
                          
@@ -53,6 +103,27 @@ class Catalogo():
 
 
     def Match(self, ObjectCatalog):
+        
+        """
+        If we have more than one catalog and we want to know how many points their have in common we will use this method.
+        
+        Firts of all, what we do here is a condition, if the catalogs have been read properly and if the catalogs are not the same we will start making the matching.
+        
+        To make the match we import from smatch library the function match, where it needs the RA and DEC of each catalog.
+        
+        Finally, when the match have been completed, we add the matching values to an array for each catalog.
+        
+        Parameter
+        ---------
+        
+        ObjectCatalog: `int`
+            Here, we write the other catalog with which we are going to make the matching.
+        
+        Returns
+        -------
+        
+        
+        """
         
         if self.Lleno and self.nombre!=ObjectCatalog.nombre:
             self.ra1_matched=self.datos[self.RA]
@@ -84,19 +155,33 @@ class Catalogo():
     
     def AreaEspacial(self):
         
+        """
+        To calculate the spatial area we only need the RA and DEC that is why we don't need a parameter here.
+        """
+        
         lado_menor1=np.max(self.datos[self.RA]) - np.min(self.datos[self.RA])
         lado_mayor1=mt.sin(np.max(self.datos[self.DEC])*mt.pi/180) - mt.sin(np.min(self.datos[self.DEC])*mt.pi/180)
-        self.area1= (180/mt.pi)*lado_menor1*lado_mayor1 
+        self.area= (180/mt.pi)*lado_menor1*lado_mayor1 
         
-        '''
-        lado_menor2=np.max(self.ra2_matched) - np.min(self.ra2_matched)
-        lado_mayor2=mt.sin(np.max(self.dec2_matched)*mt.pi/180) - mt.sin(np.min(self.dec2_matched)*mt.pi/180)
-        self.area2= (180/mt.pi)*lado_menor2*lado_mayor2 
-        '''
-        
-        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area1,'grados cuadrados')# y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
+
+        print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area,'grados cuadrados')# y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
 
     def MainCatalog (self):
+        
+        """
+        Is here where we unify both arrays that we have obtained on Match method.
+        
+        To make that, we create a loop that takes the name of each column and its values.
+        to a single file where it is going to have the matching data of the catalogs.
+        
+        If the name of two columns from differents catalogs are the same we change one of them to not lead to any failure.
+        
+        Returns
+        -------
+        
+        
+        """
+        
         nombres=[]
         arrays=[]
         
@@ -118,21 +203,27 @@ class Catalogo():
                 self.RA2 += '_'+self.nombreMatch
             if self.DEC2 in self.assoc1.columns:
                 self.DEC2 += '_'+self.nombreMatch
-            #print(self.datos.columns)
+            
                           
         else:
             print('No se ha podido unificar')
         
-        #return self.unify
-    '''
-    def DefineMain(self, datos):
-        if datos == 'sharks':
-            self.unify = self.datos
-        else:
-            self.unify = self.datos2
-    '''
     
     def __makeCondition(self, condicion):
+        """
+        This method makes directly the mask to the catalog.
+
+        Parameters
+        ----------
+        condicion : `list`
+            This list tell the method which column and what type of condition we want to impose to make the mask.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         
         if condicion[1] == 'greater':
             return np.greater(self.Extraer_columna(condicion[0]), condicion[2])
@@ -151,6 +242,20 @@ class Catalogo():
 
 
     def mascara(self, listaCondiciones):
+        """
+        With the previous method we have made the mask but if the code have read the catalog properly here we determine the mask.
+        Also we differentiate here how many conditions we have.
+
+        Parameters
+        ----------
+        listaCondiciones : `list`
+            List that specifies the column, the condition and the values to make the mask.
+
+        Returns
+        -------
+        None.
+
+        """
         '''condiciones sera una lista de listas, algo como: [['MAG_AUTO','greater',12.3], ['MAGERR_AUTO','greater',0.]]
         Los valores aceptados de condicional son: greater, greater_equal, less, less_equal, equal, not_equal
         '''
@@ -169,6 +274,20 @@ class Catalogo():
         
    
     def saveSample(self, listasColumnas):
+        """
+        In this method we can save certain columns from our unify catalog.
+
+        Parameters
+        ----------
+        listasColumnas : `list`
+            List containing the name of the columns we want to save.
+            Then we extract the columns data from our unify catalog to save them with its corresponding name
+
+        Returns
+        -------
+        None.
+
+        """
         nombres=[]
         arrays=[]
         for name in listasColumnas:
@@ -177,17 +296,51 @@ class Catalogo():
        
         self.t= Table(data=arrays, names=nombres)
    
-    def createSample(self,format='fits', nameSample='mysample'):
-        #format puede ser csv, ascii o fits
+    def createSample(self,format='fits', nameSample='mysample', comment=False):
+        """
+        Here we create the file that we have saved it before.
         
+        Also we can add some comments, change the format and introduce the name of the sample.
+
+        Parameters
+        ----------
+        format : `str`, optional
+            Format type. The default is 'fits'.
+        nameSample : `str`, optional
+            Name of the file. The default is 'mysample'.
+        comment : `bool`, optional
+            Adding some comments. The default is False.
+
+        Returns
+        -------
+        None.
+
+        """
+        #format puede ser csv, ascii o fits
+        comments= '# ID F294 E294 F295 E295 F296 E296 F297 E297 F298 E298'
             
         if format=='fits':
             self.t.write(nameSample+'.fits')
-
+       
         else:            
-            ascii.write(self.t, format=format, output=nameSample+'.'+format, overwrite=True)
+            ascii.write(self.t, format=format, output=nameSample+'.'+format, overwrite=True, comment=comments)
         
     def giveFluxes(self, MAG, tipo):
+        """
+        Method that calculates flux and its error depending on the type of flux.
+
+        Parameters
+        ----------
+        MAG : `list`
+            List containing the name of the columns we want to extract.
+        tipo : `str`
+            Type of flux.
+
+        Returns
+        -------
+        None.
+
+        """
         
         if tipo =='cgs':
             
@@ -216,6 +369,23 @@ class Catalogo():
             
     
     def correctExtinction (self, nombre_mag, flujo_o_mag, banda):
+        """
+        Method correcting extinction.
+
+        Parameters
+        ----------
+        nombre_mag : `list`
+            List containing the name of the magnitude or the flux and its error.
+        flujo_o_mag : `str`
+            Describing if nombre_mag is flux or mag.
+        banda : `str`
+            String who describes the band of our magnitude or flux.
+
+        Returns
+        -------
+        None.
+
+        """
         
         rv_pars = {'G': 3.186, 'R': 2.14, 'I': 1.569, 'Z': 1.196, 'Y': 1.048, 'Ks': 0.308}
         
@@ -234,16 +404,7 @@ class Catalogo():
                 self.datos['MAGERR_AUTO_'+banda+'_CORRECTED']= magerr_corrected
                 
                                
-                
-                '''
-                self.datos['MAG_APER_CORRECTED']=mag_corrected
-                self.datos['MAGERR_APER_CORRECTED']=magerr_corrected
-                
-            else:
-                self.datos['MAG_AUTO_'+banda+'_CORRECTED']= mag_corrected
-                self.datos['MAGERR_AUTO_'+banda+'_CORRECTED']= magerr_corrected
-            '''
-            
+
         elif flujo_o_mag == 'flux':
             flux_corrected = self.datos[nombre_mag[0]] * 10**(rv_pars[banda] * EBV/2.5)
             fluxerr_corrected = self.datos[nombre_mag[1]] * 10**(rv_pars[banda] * EBV/2.5)
@@ -257,11 +418,16 @@ class Catalogo():
         	
     
     def estado(self):
-        #self.linea=True
+        """
+        Method who reports the status of the code
+
+        Returns
+        -------
+        None.
+
+        """
         
         
-        
-        self.area= np.shape(self.datos)
         if self.Lleno:
             
             print('El catalogo '+self.nombre+' se ha cargado correctamente')
@@ -273,7 +439,7 @@ class Catalogo():
                 print ('No se ha podido realizar el match entre los catalogos '+self.nombre+' y '+self.nombreMatch)
             
             if self.mask:
-                print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area del catalogo ',self.area)
+                print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area espacial del catalogo ',self.area)
                 
             else:
                 print('No se ha podido realizar la mascara correctamente')

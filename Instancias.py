@@ -117,7 +117,7 @@ sharks_sgpe_des.correctExtinction(['FLUX_AUTO_Z','FLUXERR_AUTO_Z'],'flux','Z')
 sharks_sgpe_des.correctExtinction(['FLUX_AUTO_Y','FLUXERR_AUTO_Y'],'flux','Y')
 sharks_sgpe_des.correctExtinction(['APERFLUX3','APERFLUX3ERR'],'flux','Ks')
 sharks_sgpe_des.saveSample(['COADD_OBJECT_ID', 'FLUX_AUTO_G_CORRECTED', 'FLUXERR_AUTO_G_CORRECTED', 'FLUX_AUTO_R_CORRECTED', 'FLUXERR_AUTO_R_CORRECTED', 'FLUX_AUTO_I_CORRECTED', 'FLUXERR_AUTO_I_CORRECTED', 'FLUX_AUTO_Z_CORRECTED', 'FLUXERR_AUTO_Z_CORRECTED', 'FLUX_AUTO_Y_CORRECTED', 'FLUXERR_AUTO_Y_CORRECTED', 'FLUX_APER_CORRECTED', 'FLUXERR_APER_CORRECTED'])
-sharks_sgpe_des.createSample(format='csv', nameSample='FLUX_AND_ERR_CORRECTED')
+sharks_sgpe_des.createSample(format='basic', nameSample='Galaxias_Des_Sharks')
 
 
 sharks_sgpe_des_astrometria=astrometria_poo.astrometria(sharks_sgpe_des)
