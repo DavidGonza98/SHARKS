@@ -12,13 +12,11 @@ import smatch
 import math as mt
 
 class Catalogo():
-    
     """
      Class to define a Catalog.
     """
     
     def __init__(self, nombre, archivo, RA, DEC):
-        
         """
         Instantiate a Catalog.
         
@@ -55,7 +53,6 @@ class Catalogo():
         self.healpix = False
     
     def LeerArchivo(self):
-        
         """
         With this method we start reading the catalog.
         Also if we have read properly the catalog, we will print its length.
@@ -78,7 +75,6 @@ class Catalogo():
             print('No ha sido posible cargar los datos del catálogo ', self.nombre)
         
     def Extraer_columna(self, DameColumna):
-        
         """
         Here what the code does is to extract a column, which is specified in the parameter DameColumna.
         
@@ -103,7 +99,6 @@ class Catalogo():
 
 
     def Match(self, ObjectCatalog):
-        
         """
         If we have more than one catalog and we want to know how many points their have in common we will use this method.
         
@@ -154,7 +149,6 @@ class Catalogo():
        
     
     def AreaEspacial(self):
-        
         """
         To calculate the spatial area we only need the RA and DEC that is why we don't need a parameter here.
         """
@@ -167,7 +161,6 @@ class Catalogo():
         print('El valor del area de la esfera del catalogo '+self.nombre+' es',self.area,'grados cuadrados')# y el area del catalogo '+self.nombreMatch+' es',self.area2, 'grados cuadrados')
 
     def MainCatalog (self):
-        
         """
         Is here where we unify both arrays that we have obtained on Match method.
         
