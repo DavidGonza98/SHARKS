@@ -20,12 +20,20 @@ Crear clase PhotoZ()
         Returns
         -------
         """
+	
+
+	self.nombresalida = 'mytest'
+	self.__Prepare()
+	self.__mergeResults()
 
 Functions:
-	def Prepare(self):
+	def __Prepare(self):
 		"""Create the list of filenames we need 
 		
-		zout_results = [f + tag + '.zout.fits' for f in parentList]
+		zout_results = []
+		for f in self.parentList:
+			zout_results.append(f + tag + '.zout.fits')
+
 		zeropoints = [f + tag + '.zphot.zeropoint' for f in parentList]
 		translate = [f + tag + '.zphot.translate' for f in parentList]
 		params = [f + tag + '.zphot.param' for f in parentList]
@@ -33,12 +41,43 @@ Functions:
 		
 		"""
 
-	def mergeResults(self):
+	def unify_data()...
+
+	def __mergeResults(self):
 		"""This function merge results into a single file (see unify_data.py)
 		
 		Create a single file zout, parentcat, translate and zeropoints (only change name to first), change params (change name and set MAIN_OUTPUT_FILE and CATALOG_FILE), datafits
 
 		""" 	
+
+		1) Parentlist: ascii (basic). merge self.parentList en un unico archivo txt.
+			leerlos todos con numpy loadtxt 
+			Table
+			>>  un unico archivo txt..zout.fits
+			for f in zout_results:
+				datos = Table... 
+			datos_final = datos1 +datos2 ...
+			writeto()
+
+		2) 3) 4) translate, params y zeropoints: 
+			Coger el primero de la lista, y cambiarle el nombre
+			>> os.system("cp {CATIN} {CATOUT}".format(CATIN=translate[0], CATOUT=translate_name) 
+
+		
+		!ESTE! EL 5.
+		5) zout_results: fits
+			leer con Table
+			>> crear un archivo formato fits.
+
+
+
+
+		6) datafits: fits image con varias extensiones.
+		
+		zout_name = self.nombresalida + '.zout.fits'
+		translate_name = self.nombresalida + '.zphot.translate'
+		...
+		...
 
 	def makeZspec_vs_Zphot(self, ax=None):
 		"""This function makes a plot of zspec versus zphot
@@ -46,26 +85,39 @@ Functions:
 		From scratch or using eazy-py
 
 		"""
+		return 0
 
 	def makePlotTemplate(self):
 		""" Needs eazy """
+		return 0
 
 	def getStats(self):
-		""" get the following statistics for the photoz where z_spec >= 0 
-			sigma68/(1+z)  arr = (zspec-zphot)/(1+z)
-			NMAD (see eq: 1 in https://arxiv.org/pdf/1910.08588.pdf or alternatively eq: 7 in https://arxiv.org/pdf/0807.1533.pdf)
-			zbias  mean(delta_z_1pz)
-			outliers arr = (zspec-zphot)
-			Qz (eq 8 in https://arxiv.org/pdf/0807.1533.pdf)
+		Leyendo el catalogo zout_name (fits file, abrirás Table)
+		Por ahora, para toda la muestra z_spec >=0
 
-		Globally and in redshift intervals [define if doing intervals in zphot or zspec]
+		""" get the following statistics for the photoz where z_spec >= 0 
+			sigma68/(1+z)  arr = (z_spec-zphot)/(1+z_spec)
+
+			NMAD (see eq: 1 in https://arxiv.org/pdf/1910.08588.pdf or alternatively eq: 7 in https://arxiv.org/pdf/0807.1533.pdf)
+
+			zbias  np.mean(delta_z_1pz)
+
+			outliers arr = (zspec-zphot)
+
+		(PARA MAS TARDE)
+		
+		Qz (eq 8 in https://arxiv.org/pdf/0807.1533.pdf)
+
+		In redshift intervals [define if doing intervals in zphot or zspec]
 		"""
+
 
 	def delta_z(z_spec, z_phot):
 		return z_spec - z_phot
 
 	def delta_z_1pz(z_spec, z_phot):
 		return delta_z(z_spec, z_phot) / (1 + z_spec)
+
 
 	def sigma_68(arr, axis=None):
 		"""Input: an (multi-dimensional) array
@@ -74,6 +126,7 @@ Functions:
 		"""
 		upper, lower = np.percentile(arr, [84.075, 15.825], axis=axis)
 		return (upper - lower) / 2.0
+
 
 	def outlier_rate(arr, outR=None):
 		"""assumes frac outliers >0.15"""
