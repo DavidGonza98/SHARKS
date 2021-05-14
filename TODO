@@ -53,11 +53,12 @@ Functions:
 	def getStats(self):
 		""" get the following statistics for the photoz where z_spec >= 0 
 			sigma68/(1+z)  arr = (zspec-zphot)/(1+z)
-			NMAD (see eq: 1 in https://arxiv.org/pdf/1910.08588.pdf)
+			NMAD (see eq: 1 in https://arxiv.org/pdf/1910.08588.pdf or alternatively eq: 7 in https://arxiv.org/pdf/0807.1533.pdf)
 			zbias  mean(delta_z_1pz)
 			outliers arr = (zspec-zphot)
+			Qz (eq 8 in https://arxiv.org/pdf/0807.1533.pdf)
 
-		Globally and in redshift intervals
+		Globally and in redshift intervals [define if doing intervals in zphot or zspec]
 		"""
 
 	def delta_z(z_spec, z_phot):
