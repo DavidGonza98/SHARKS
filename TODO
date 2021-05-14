@@ -1,19 +1,81 @@
 
 (tareas para Aurelio): Crear funcion en astrometria para hacer distribucion de healpix y otra en catalogo que haga el histograma healpix
 
-1) FUNCION ESTADO EN CATALOGO!! COMO PUEDES PONER TODO A TRUE??? Eso lo leerá según el estado real de la instancia, aquí estás forzando para que siempre sea TRUE, independientemente de lo que hayamos hecho a la clase!!
+Crear clase PhotoZ()
+	""" Class to characterize photo-z """
 
-2) cambiar self.area1 por self.area!! Cuando hago un estado de catálogo, me sigue saliendo que:
+	"""
+        Instantiate a PhotoZ
+        
+        Parameters
+        ----------
+        
+        codeName: `str`
+		The name of the photoZ code, "eazy".
+        parentList: `list`
+		The list of files to analise: ['gals_dessharks_1.txt', 'gals_dessharks_2.txt', 'gals_dessharks_3.txt', 'gals_dessharks_4.txt', 'gals_dessharks_5.txt']
+        tag: `str`
+		A tag associated with the parentList, "sharks"
 
-print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area del catalogo ',self.area)
+        Returns
+        -------
+        """
 
-(Esto es lo que no tiene sentido: self.area= np.shape(self.datos))
+Functions:
+	def Prepare(self):
+		"""Create the list of filenames we need 
+		
+		zout_results = [f + tag + '.zout.fits' for f in parentList]
+		zeropoints = [f + tag + '.zphot.zeropoint' for f in parentList]
+		translate = [f + tag + '.zphot.translate' for f in parentList]
+		params = [f + tag + '.zphot.param' for f in parentList]
+		datafits = [f + tag + '.data.fits' for f in parentList]
+		
+		"""
 
-3) Running eazy-py
+	def mergeResults(self):
+		"""This function merge results into a single file (see unify_data.py)
+		
+		Create a single file zout, parentcat, translate and zeropoints (only change name to first), change params (change name and set MAIN_OUTPUT_FILE and CATALOG_FILE), datafits
 
-4) Documentation: 
-	https://www.pythonforthelab.com/blog/documenting-with-sphinx-and-readthedocs/
-	https://python-docs.readthedocs.io/en/latest/writing/documentation.html
-	https://brendanhasz.github.io/2019/01/05/sphinx.html
+		""" 	
 
+	def makeZspec_vs_Zphot(self, ax=None):
+		"""This function makes a plot of zspec versus zphot
 
+		From scratch or using eazy-py
+
+		"""
+
+	def makePlotTemplate(self):
+		""" Needs eazy """
+
+	def getStats(self):
+		""" get the following statistics for the photoz where z_spec >= 0 
+			sigma68/(1+z)  arr = (zspec-zphot)/(1+z)
+			NMAD (see eq: 1 in https://arxiv.org/pdf/1910.08588.pdf)
+			zbias  mean(delta_z_1pz)
+			outliers arr = (zspec-zphot)
+
+		Globally and in redshift intervals
+		"""
+
+	def delta_z(z_spec, z_phot):
+		return z_spec - z_phot
+
+	def delta_z_1pz(z_spec, z_phot):
+		return delta_z(z_spec, z_phot) / (1 + z_spec)
+
+	def sigma_68(arr, axis=None):
+		"""Input: an (multi-dimensional) array
+			Optional input: the axis along which to calculate the metric
+			Outputs: the 68% spread of data about the median value of the array
+		"""
+		upper, lower = np.percentile(arr, [84.075, 15.825], axis=axis)
+		return (upper - lower) / 2.0
+
+	def outlier_rate(arr, outR=None):
+		"""assumes frac outliers >0.15"""
+		if outR is None:
+			outR = 0.15
+		return np.sum(np.abs(arr) > outR)*1.0/len(arr)

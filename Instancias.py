@@ -115,11 +115,12 @@ sharks_sgpe_des.correctExtinction(['FLUX_AUTO_R','FLUXERR_AUTO_R'],'flux','R')
 sharks_sgpe_des.correctExtinction(['FLUX_AUTO_I','FLUXERR_AUTO_I'],'flux','I')
 sharks_sgpe_des.correctExtinction(['FLUX_AUTO_Z','FLUXERR_AUTO_Z'],'flux','Z')
 sharks_sgpe_des.correctExtinction(['FLUX_AUTO_Y','FLUXERR_AUTO_Y'],'flux','Y')
-sharks_sgpe_des.correctExtinction(['APERFLUX3','APERFLUX3ERR'],'flux','Ks')
-sharks_sgpe_des.saveSample(['COADD_OBJECT_ID', 'FLUX_AUTO_G_CORRECTED', 'FLUXERR_AUTO_G_CORRECTED', 'FLUX_AUTO_R_CORRECTED', 'FLUXERR_AUTO_R_CORRECTED', 'FLUX_AUTO_I_CORRECTED', 'FLUXERR_AUTO_I_CORRECTED', 'FLUX_AUTO_Z_CORRECTED', 'FLUXERR_AUTO_Z_CORRECTED', 'FLUX_AUTO_Y_CORRECTED', 'FLUXERR_AUTO_Y_CORRECTED', 'FLUX_APER_CORRECTED', 'FLUXERR_APER_CORRECTED'])
-sharks_sgpe_des.createSample(format='basic', nameSample='Galaxias_Des_Sharks')
+sharks_sgpe_des.correctExtinction(['PETROFLUX','PETROFLUXERR'],'flux','Ks')
 
+sharks_sgpe_des.saveSample(['COADD_OBJECT_ID','RA','DEC', 'FLUX_AUTO_CORRECTED_G', 'FLUXERR_AUTO_CORRECTED_G', 'FLUX_AUTO_CORRECTED_R', 'FLUXERR_AUTO_CORRECTED_R', 'FLUX_AUTO_CORRECTED_I', 'FLUXERR_AUTO_CORRECTED_I', 'FLUX_AUTO_CORRECTED_Z', 'FLUXERR_AUTO_CORRECTED_Z', 'FLUX_AUTO_CORRECTED_Y', 'FLUXERR_AUTO_CORRECTED_Y', 'FLUX_APER_CORRECTED', 'FLUXERR_APER_CORRECTED'])
+sharks_sgpe_des.createSample(format='basic', nameSample='Galaxias_dessharks')
 
+'''
 sharks_sgpe_des_astrometria=astrometria_poo.astrometria(sharks_sgpe_des)
 sharks_sgpe_des_astrometria.Distancia_Angular()
 #sharks_sgpe_des_astrometria.Histograma('Distancia angular')#, sharks_sgpe_des, des)
@@ -137,7 +138,7 @@ sharks_sgpe_des_astrometria.plot('X')
 
 
 sharks_sgpe_des_astrometria.plot('L')
-
+'''
 
 
 
