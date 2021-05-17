@@ -1,18 +1,17 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Mar 31 16:39:46 2021
 
 @author: lpama
 """
 
-from astropy.table import Table
-import numpy as np
-import smatch
-import math as mt
-import seaborn as sns
-import matplotlib.pyplot as plt
-from scipy import optimize, stats
-import pandas as pd
+#from astropy.table import Table
+#import numpy as np
+#import smatch
+#import math as mt
+#import seaborn as sns
+#import matplotlib.pyplot as plt
+#from scipy import optimize, stats
+#import pandas as pd
 
 class astrometria():
     """
@@ -72,7 +71,8 @@ class astrometria():
             Angular distance.
 
         """        
-        
+        import numpy as np
+        import math as mt
         self.cosgamma = np.zeros(len(self.datos))
 
         
@@ -95,6 +95,8 @@ class astrometria():
         None.
 
         """
+        import matplotlib.pyplot as plt
+        import seaborn as sns
     
         plt.figure(1)
         if tipo == 'Distancia angular':
@@ -123,6 +125,8 @@ class astrometria():
         None.
 
         """
+        import matplotlib.pyplot as plt
+        import numpy as np
         plt.clf()
         dra=self.ra1_matched-self.ra2_matched
         ddec=self.dec1_matched-self.dec2_matched

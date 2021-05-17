@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Mar 30 12:19:08 2021
 
 @author: lpama
 """
 
-from astropy.table import Table
-import numpy as np
-from astropy.io import ascii
-import smatch
-import math as mt
+#from astropy.table import Table
+#import numpy as np
+#from astropy.io import ascii
+#import smatch
+#import math as mt
 
 class Catalogo():
     """
@@ -31,15 +30,14 @@ class Catalogo():
             Name of the right ascension of our catalog.
         DEC: `int` 
             Name of the declination of our catalog.
-        
+
+
         Returns
         -------
-        
-                
-        
-        
-        
+        None.
+
         """
+                
         self.nombre= nombre
         self.archivo= archivo
         self.Lleno=False
@@ -56,12 +54,13 @@ class Catalogo():
         """
         With this method we start reading the catalog.
         Also if we have read properly the catalog, we will print its length.
-        
+
         Returns
         -------
-        
-    
+        None.
+
         """
+        from astropy.table import Table
         self.datos = Table.read(self.archivo, format= 'fits')
 
         self.Lleno=True
@@ -86,9 +85,15 @@ class Catalogo():
         ---------
         DameColumna: `list`
             Name of column from the catalog that we want to extract.
-                
-        """
+
         
+        Returns
+        -------
+        `list`
+            Here we return the column that we have named before.
+
+        """
+        import numpy as np       
         if DameColumna in self.datos.keys():
             print('La columna', DameColumna, 'tiene una longitud de', len(self.datos[DameColumna]), 'un maximo de', np.max(self.datos[DameColumna]),'y un minimo de', np.min(self.datos[DameColumna]))
                          
@@ -113,13 +118,15 @@ class Catalogo():
         
         ObjectCatalog: `int`
             Here, we write the other catalog with which we are going to make the matching.
-        
+
+
         Returns
         -------
-        
-        
+        None.
+
         """
-        
+        import smatch
+                
         if self.Lleno and self.nombre!=ObjectCatalog.nombre:
             self.ra1_matched=self.datos[self.RA]
             self.dec1_matched=self.datos[self.DEC]
@@ -151,8 +158,14 @@ class Catalogo():
     def AreaEspacial(self):
         """
         To calculate the spatial area we only need the RA and DEC that is why we don't need a parameter here.
+
+        Returns
+        -------
+        None.
+
         """
-        
+        import numpy as np
+        import math as mt        
         lado_menor1=np.max(self.datos[self.RA]) - np.min(self.datos[self.RA])
         lado_mayor1=mt.sin(np.max(self.datos[self.DEC])*mt.pi/180) - mt.sin(np.min(self.datos[self.DEC])*mt.pi/180)
         self.area= (180/mt.pi)*lado_menor1*lado_mayor1 
@@ -168,13 +181,14 @@ class Catalogo():
         to a single file where it is going to have the matching data of the catalogs.
         
         If the name of two columns from differents catalogs are the same we change one of them to not lead to any failure.
-        
+
         Returns
         -------
-        
-        
+        None.
+
         """
-        
+
+        from astropy.table import Table
         nombres=[]
         arrays=[]
         
@@ -213,11 +227,11 @@ class Catalogo():
 
         Returns
         -------
-        TYPE
-            DESCRIPTION.
+        `np.ndarray`
+            Depending on the condition we have entered, we will obtain an array with the values that can pass through that condition.
 
         """
-        
+        import numpy as np
         if condicion[1] == 'greater':
             return np.greater(self.Extraer_columna(condicion[0]), condicion[2])
         elif condicion[1] == 'greater_equal':
@@ -249,9 +263,9 @@ class Catalogo():
         None.
 
         """
-        '''condiciones sera una lista de listas, algo como: [['MAG_AUTO','greater',12.3], ['MAGERR_AUTO','greater',0.]]
-        Los valores aceptados de condicional son: greater, greater_equal, less, less_equal, equal, not_equal
-        '''
+        #condiciones sera una lista de listas, algo como: [['MAG_AUTO','greater',12.3], ['MAGERR_AUTO','greater',0.]]
+        #Los valores aceptados de condicional son: greater, greater_equal, less, less_equal, equal, not_equal
+        
         if self.Lleno:
             mask = (self.__makeCondition(listaCondiciones[0]))
             if len(listaCondiciones)>1:
@@ -281,6 +295,7 @@ class Catalogo():
         None.
 
         """
+        from astropy.table import Table
         nombres=[]
         arrays=[]
         for name in listasColumnas:
@@ -309,6 +324,8 @@ class Catalogo():
         None.
 
         """
+        from astropy.table import Table
+        from astropy.io import ascii
         #format puede ser csv, ascii o fits
         comments= '# ID F294 E294 F295 E295 F296 E296 F297 E297 F298 E298'
             

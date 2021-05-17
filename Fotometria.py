@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
 """
 Created on Mon Apr 12 20:52:44 2021
 
 @author: lpama
 """
-from astropy.table import Table
-import numpy as np
-import smatch
-import math as mt
-import seaborn as sns
-import pylab as plt
-from scipy import optimize, stats
-import pandas as pd
+#from astropy.table import Table
+#import numpy as np
+#import smatch
+#import math as mt
+#import seaborn as sns
+#import pylab as plt
+#from scipy import optimize, stats
+#import pandas as pd
      
 
 
@@ -61,7 +60,7 @@ class fotometria():
         None.
 
         """
-        
+        import pylab as plt
         plt.figure(2)      
         self.p=plt.polyfit(self.datos[magnitud1], self.datos[magnitud2], 1)
         Y=self.p[0]*self.datos[magnitud1] + self.p[1] 
@@ -104,6 +103,10 @@ class fotometria():
         None.
 
         """
+        from scipy import optimize
+        import pylab as plt
+        import numpy as np
+        import pandas as pd
         
         fitfunc = lambda p, x: p[0] + p[1] * x
         errfunc = lambda p, x, y, err: (y - fitfunc(p, x)) / err

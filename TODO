@@ -123,7 +123,7 @@ Functions:
 		Qz (eq 8 in https://arxiv.org/pdf/0807.1533.pdf)
 
 		In redshift intervals [define if doing intervals in zphot or zspec]
-		"""
+
 
 
 	def delta_z(z_spec, z_phot):
