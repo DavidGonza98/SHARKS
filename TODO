@@ -63,10 +63,21 @@ Functions:
 			Coger el primero de la lista, y cambiarle el nombre
 			>> os.system("cp {CATIN} {CATOUT}".format(CATIN=translate[0], CATOUT=translate_name) 
 
-		
+		#from astropy.table import Table, vstack
 		!ESTE! EL 5.
+
 		5) zout_results: fits
 			leer con Table
+			
+			lista_temp = []
+			for f in  self.zout_results:
+				t = Table.read(f, format= 'fits')
+				lista_temp.append(t)
+			self.mergeZout = vstack(lista_temp)
+
+			mergeZout.writeto()....
+
+
 			>> crear un archivo formato fits.
 
 
@@ -92,6 +103,9 @@ Functions:
 		return 0
 
 	def getStats(self):
+
+		Va a leer desde self.mergeZout o del archivo que hayas guardado.
+
 		Leyendo el catalogo zout_name (fits file, abrirás Table)
 		Por ahora, para toda la muestra z_spec >=0
 
