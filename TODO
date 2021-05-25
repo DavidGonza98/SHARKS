@@ -18,7 +18,7 @@ si code='lephare':
 
 
 	def __readLephare(self):
-		z_spec, z_phot = np.loadtxt(self.parentList, usecols=(1,41), comments='#')
+		z_phot, z_spec = np.loadtxt(self.parentList, usecols=(1,41), comments='#', unpack=True)
 		self.mergeZout = {'z_phot':z_phot, 'z_spec':z_spec}
 
 -------------------------------------------------
