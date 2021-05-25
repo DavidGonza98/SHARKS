@@ -1,149 +1,49 @@
 
 (tareas para Aurelio): Crear funcion en astrometria para hacer distribucion de healpix y otra en catalogo que haga el histograma healpix
 
-Crear clase PhotoZ()
-	""" Class to characterize photo-z """
-
-	"""
-        Instantiate a PhotoZ
-        
-        Parameters
-        ----------
-        
-        codeName: `str`
-		The name of the photoZ code, "eazy".
-        parentList: `list`
-		The list of files to analise: ['gals_dessharks_1.txt', 'gals_dessharks_2.txt', 'gals_dessharks_3.txt', 'gals_dessharks_4.txt', 'gals_dessharks_5.txt']
-        tag: `str`
-		A tag associated with the parentList, "sharks"
-
-        Returns
-        -------
-        """
-	
-
-	self.nombresalida = 'mytest'
+Modificar la clase photoZ
+-----------------------------------------------
+si code="eazy":
 	self.__Prepare()
-	self.__mergeResults()
+        self.__mergeResults()
 
-Functions:
-	def __Prepare(self):
-		"""Create the list of filenames we need 
-		
-		zout_results = []
-		for f in self.parentList:
-			zout_results.append(f + tag + '.zout.fits')
+	#ESTO SOLO ES UN COMMENT parentList = ['gals_dessharks_1.txt', 'gals_dessharks_2.txt', 'gals_dessharks_3.txt', 'gals_dessharks_4.txt', 'gals_dessharks_5.txt']
 
-		zeropoints = [f + tag + '.zphot.zeropoint' for f in parentList]
-		translate = [f + tag + '.zphot.translate' for f in parentList]
-		params = [f + tag + '.zphot.param' for f in parentList]
-		datafits = [f + tag + '.data.fits' for f in parentList]
-		
-		"""
+si code='lephare':
 
-	def unify_data()...
+	#ESTO SOLO ES UN COMMENT parentList = 'dessharks_pog.output'
 
-	def __mergeResults(self):
-		"""This function merge results into a single file (see unify_data.py)
-		
-		Create a single file zout, parentcat, translate and zeropoints (only change name to first), change params (change name and set MAIN_OUTPUT_FILE and CATALOG_FILE), datafits
-
-		""" 	
-
-		1) Parentlist: ascii (basic). merge self.parentList en un unico archivo txt.
-			leerlos todos con numpy loadtxt 
-			Table
-			>>  un unico archivo txt..zout.fits
-			for f in zout_results:
-				datos = Table... 
-			datos_final = datos1 +datos2 ...
-			writeto()
-
-		2) 3) 4) translate, params y zeropoints: 
-			Coger el primero de la lista, y cambiarle el nombre
-			>> os.system("cp {CATIN} {CATOUT}".format(CATIN=translate[0], CATOUT=translate_name) 
-
-		#from astropy.table import Table, vstack
-		!ESTE! EL 5.
-
-		5) zout_results: fits
-			leer con Table
-			
-			lista_temp = []
-			for f in  self.zout_results:
-				t = Table.read(f, format= 'fits')
-				lista_temp.append(t)
-			self.mergeZout = vstack(lista_temp)
-
-			mergeZout.writeto()....
+	self.__readLephare()
+-----------------------------------------------
 
 
-			>> crear un archivo formato fits.
+	def __readLephare(self):
+		z_spec, z_phot = np.loadtxt(self.parentList, usecols=(1,41), comments='#')
+		self.mergeZout = {'z_phot':z_phot, 'z_spec':z_spec}
+
+-------------------------------------------------
 
 
 
+en instancias:
 
-		6) datafits: fits image con varias extensiones.
-		
-		zout_name = self.nombresalida + '.zout.fits'
-		translate_name = self.nombresalida + '.zphot.translate'
-		...
-		...
+----------------------------------
+results_eazy = PhotoZ.PhotoZ('lephare', 'dessharks_pog.output', 'dessharks_pog')
 
-	def makeZspec_vs_Zphot(self, ax=None):
-		"""This function makes a plot of zspec versus zphot
+results_eazy.getStats()
+results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5])
+-----------------------------------
 
-		From scratch or using eazy-py
+results_eazy = PhotoZ.PhotoZ('lephare', 'desonly_pog.output', 'desonly_pog')
 
-		"""
-		return 0
+results_eazy.getStats()
+results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5])
+-----------------------------------
 
-	def makePlotTemplate(self):
-		""" Needs eazy """
-		return 0
+results_eazy = PhotoZ.PhotoZ('lephare', 'dessharks.output', 'dessharks')
 
-	def getStats(self):
-
-		Va a leer desde self.mergeZout o del archivo que hayas guardado.
-
-		Leyendo el catalogo zout_name (fits file, abrirás Table)
-		Por ahora, para toda la muestra z_spec >=0
-
-		""" get the following statistics for the photoz where z_spec >= 0 
-			sigma68/(1+z)  arr = (z_spec-zphot)/(1+z_spec)
-
-			NMAD (see eq: 1 in https://arxiv.org/pdf/1910.08588.pdf or alternatively eq: 7 in https://arxiv.org/pdf/0807.1533.pdf)
-
-			zbias  np.mean(delta_z_1pz)
-
-			outliers arr = (zspec-zphot)
-
-		(PARA MAS TARDE)
-		
-		Qz (eq 8 in https://arxiv.org/pdf/0807.1533.pdf)
-
-		In redshift intervals [define if doing intervals in zphot or zspec]
+results_eazy.getStats()
+results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5])
 
 
 
-	def delta_z(z_spec, z_phot):
-		return z_spec - z_phot
-
-	def delta_z_1pz(z_spec, z_phot):
-		return delta_z(z_spec, z_phot) / (1 + z_spec)
-
-
-	def sigma_68(arr, axis=None):
-		"""Input: an (multi-dimensional) array
-			Optional input: the axis along which to calculate the metric
-			Outputs: the 68% spread of data about the median value of the array
-		"""
-		upper, lower = np.percentile(arr, [84.075, 15.825], axis=axis)
-		return (upper - lower) / 2.0
-
-
-	def outlier_rate(arr, outR=None):
-		"""assumes frac outliers >0.15"""
-		if outR is None:
-			outR = 0.15
-		return np.sum(np.abs(arr) > outR)*1.0/len(arr)

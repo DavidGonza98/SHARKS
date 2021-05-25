@@ -192,7 +192,7 @@ class PhotoZ():
         plt.ylabel('zphot')
         plt.title('Metrical measures')
         plt.legend()
-        plt.savefig('Metrical_measures.png')
+        plt.savefig('%s_Metrical_measures.png' % self.tag)
             
     def delta_z(self):
         
