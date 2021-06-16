@@ -449,7 +449,7 @@ class Catalogo():
                 print ('No se ha podido realizar el match entre los catalogos '+self.nombre+' y '+self.nombreMatch)
             
             if self.mask:
-                print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area espacial del catalogo ',self.area)
+                print('Tras haber realizado correctamente la mascara tenemos ',len(self.datos),' objetos, siendo el area espacial del catalogo ')#,self.area)
                 
             else:
                 print('No se ha podido realizar la mascara correctamente')
