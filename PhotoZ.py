@@ -81,6 +81,7 @@ class PhotoZ():
         self.datos = Table.read(self.parentList, format= 'fits')
         self.z_spec= self.datos["ZSPEC"]
         mask= (self.z_spec!=1)
+        self.datos=self.datos[mask]
         self.zspec=self.z_spec[mask]
         self.zphot_doy= self.datos["ZPHOT_DOY"][mask]
         self.zphot_shd=self.datos["ZPHOT_SHD"][mask]
@@ -293,43 +294,94 @@ class PhotoZ():
     
     def plot(self):
         import matplotlib.pyplot as plt
-        
-        
+        mask=(self.z_spec!=-1)&(self.z_spec!=1)
+        z_spec=self.z_spec[mask]
+        zphot_doy=self.zphot_doy[mask]
+        zphot_shd=self.zphot_shd[mask]
+        zphot_cww_doy=self.zphot_cww_doy[mask]
+        zphot_cww_shd=self.zphot_cww_shd[mask]
+
+        plt.clf()
         fig, axs = plt.subplots(2, 2)
-        axs[0, 0].plot(self.zspec, self.zphot_doy,'.', label='Zphot_doy')
+        axs[0, 0].plot(z_spec, zphot_doy,'.', label='Zphot_doy')
+        axs[0, 0].plot(z_spec, z_spec, 'r--')
         axs[0, 0].set_title('DOY')
         axs[0, 0].legend()
-        axs[0, 1].plot(self.zspec, self.zphot_shd,'.', label='Zphot_shd')
+        axs[0, 1].plot(z_spec, zphot_shd,'.', label='Zphot_shd')
+        axs[0, 1].plot(z_spec, z_spec, 'r--')
         axs[0, 1].set_title('SHD')
         axs[0, 1].legend()
-        axs[1, 0].plot(self.zspec, self.zphot_cww_doy,'.', label='Zphot_cww_doy')
+        axs[1, 0].plot(z_spec, zphot_cww_doy,'.', label='Zphot_cww_doy')
+        axs[1, 0].plot(z_spec, z_spec, 'r--')
         axs[1, 0].set_title('CWW_DOY')
         axs[1, 0].legend()
-        axs[1, 1].plot(self.zspec, self.zphot_cww_shd,'.', label='Zphot_cww_shd')
+        axs[1, 1].plot(z_spec, zphot_cww_shd,'.', label='Zphot_cww_shd')
+        axs[1, 1].plot(z_spec, z_spec, 'r--')
         axs[1, 1].set_title('CWW_SHD')
         axs[1, 1].legend()
         
         for ax in axs.flat:
             ax.set(xlabel='zspec', ylabel='zphot')
+            ax.set(xlim=[0., 1], ylim=[0, 1])
 
         # Hide x labels and tick labels for top plots and y ticks for right plots.
         for ax in axs.flat:
             ax.label_outer()
-            
+        plt.savefig('Subplot_Zphot.png') 
+        plt.clf()
     def get_stats_Master(self, lims, without_bin=False, phot_type=False):
         
         import matplotlib.pyplot as plt
         import numpy as np
+        import seaborn as sns
+        
         bin_central = []
         sigma68 = []
         outliers = []
         zbias = []
         NMAD = []
         
+        self.phot_type= self.datos['PHOT_TYPE_SHD']
+        mask1 = (self.phot_type=='G')&(self.zspec>0)&(self.zspec!=-1)&(self.zspec!=1)
 
         lista=[self.zphot_doy, self.zphot_shd, self.zphot_cww_doy, self.zphot_cww_shd]
+        zspec=self.zspec[mask1]
+        zphot_doy=self.zphot_doy[mask1]
+        zphot_shd=self.zphot_shd[mask1]
+        zphot_cww_doy=self.zphot_cww_doy[mask1]
+        zphot_cww_shd=self.zphot_cww_shd[mask1]
         
+        plt.figure(1)    
+        plt.clf()
+        fig, axs = plt.subplots(2, 2)
+        axs[0, 0].plot(zspec, zphot_doy,'.', label='Zphot_doy')
+        axs[0, 0].plot(zspec, zspec, 'r--')
+        axs[0, 0].set_title('DOY')
+        axs[0, 0].legend()
+        axs[0, 1].plot(zspec, zphot_shd,'.', label='Zphot_shd')
+        axs[0, 1].plot(zspec, zspec, 'r--')
+        axs[0, 1].set_title('SHD')
+        axs[0, 1].legend()
+        axs[1, 0].plot(zspec, zphot_cww_doy,'.', label='Zphot_cww_doy')
+        axs[1, 0].plot(zspec, zspec, 'r--')
+        axs[1, 0].set_title('CWW_DOY')
+        axs[1, 0].legend()
+        axs[1, 1].plot(zspec, zphot_cww_shd,'.', label='Zphot_cww_shd')
+        axs[1, 1].plot(zspec, zspec, 'r--')
+        axs[1, 1].set_title('CWW_SHD')
+        axs[1, 1].legend()
+        
+        for ax in axs.flat:
+            ax.set(xlabel='zspec', ylabel='zphot')
+            ax.set(xlim=[0., 1], ylim=[0, 1])
+
+        # Hide x labels and tick labels for top plots and y ticks for right plots.
+        for ax in axs.flat:
+            ax.label_outer()
+        plt.savefig('Subplot_Zphot_phot_type.png')
+        plt.clf()
         if without_bin:
+            self.tag='not_bin'
             for i in lista:
                 
                 arr = (self.zspec-i)/(1+self.zspec)
@@ -341,11 +393,18 @@ class PhotoZ():
             print (zbias)
         else:
             for i in range(len(lims)-1):
-                mask = (self.zspec>lims[i])&(self.zspec<lims[i+1])
+                
+                if phot_type:
+                    mask=(self.zspec>lims[i])&(self.zspec<lims[i+1])&(self.phot_type=='G')&(self.zspec>0)&(self.zspec!=-1)&(self.zspec!=1)
+                    self.tag='Master_Cat_phot_type'
+                    
+                else:
+                    mask = (self.zspec>lims[i])&(self.zspec<lims[i+1])
             
                 zspec_tem = self.zspec[mask]
                 bin_central.append((lims[i]+lims[i+1])/2.)
-            
+                
+                    
                 for i in lista:
                     i=i[mask]
                     arr = (zspec_tem-i)/(1+zspec_tem)
@@ -393,7 +452,8 @@ class PhotoZ():
         
         
         
-            plt.figure(1)
+            plt.figure(2)
+            plt.clf()
             lista_zbias=[zbias_doy, zbias_shd, zbias_cww_doy, zbias_cww_shd]
             for i in lista_zbias:
                 plt.plot(bin_central, i)
@@ -403,7 +463,7 @@ class PhotoZ():
                 plt.legend(('Zphot_DOY', 'Zphot_SHD', 'Zphot_CWW_DOY', 'Zphot_CWW_SHD'))
                 plt.savefig('Zbias_measures_'+self.tag+'.png')
         
-            plt.figure(2)
+            plt.figure(3)
             lista_outliers=[outliers_doy, outliers_shd, outliers_cww_doy, outliers_cww_shd]
             for i in lista_outliers:
                 plt.plot(bin_central, i)
@@ -412,7 +472,7 @@ class PhotoZ():
                 plt.title('Outliers measures')
                 plt.legend(('Zphot_DOY', 'Zphot_SHD', 'Zphot_CWW_DOY', 'Zphot_CWW_SHD'))
                 plt.savefig('Outliers_measures_'+self.tag+'.png')
-            plt.figure(3)
+            plt.figure(4)
             lista_sigma68=[sigma68_doy, sigma68_shd, sigma68_cww_doy, sigma68_cww_shd]
             for i in lista_sigma68:
                 plt.plot(bin_central, i)
@@ -421,7 +481,7 @@ class PhotoZ():
                 plt.title('Sigma68 measures')
                 plt.legend(('Zphot_DOY', 'Zphot_SHD', 'Zphot_CWW_DOY', 'Zphot_CWW_SHD'))
                 plt.savefig('Sigma68_measures_'+self.tag+'.png')
-            plt.figure(4)
+            plt.figure(5)
             lista_NMAD=[NMAD_doy, NMAD_shd, NMAD_cww_doy, NMAD_cww_shd]
             for i in lista_NMAD:
                 plt.plot(bin_central, i)
@@ -430,6 +490,96 @@ class PhotoZ():
                 plt.title('NMAD measures')
                 plt.legend(('Zphot_DOY', 'Zphot_SHD', 'Zphot_CWW_DOY', 'Zphot_CWW_SHD'))
                 plt.savefig('NMAD_measures_'+self.tag+'.png')
+                
+    def Histograma(self):
+        
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import seaborn as sns
+        
+        self.phot_type= self.datos['PHOT_TYPE_SHD']
+        
+        #print (self.zphot_cww_doy)
+        
+        #mask1 = (self.phot_type=='G')&(self.zspec>0)
+       
+        zphot_cww_doy=self.zphot_cww_doy#[mask1]
+        zphot_cww_shd=self.zphot_cww_shd#[mask1]
+        zphot_doy=self.zphot_doy#[mask1]
+        zphot_shd=self.zphot_shd#[mask1]
+        
+        
+        lims= np.arange(0, 2, 0.05)
+        #[0. , 0.2,  0.4, 0.6, 0.8, 1., 1.2, 1.4, 1.6, 1.8, 2]
+        
+        plt.figure(1)
+        plt.hist(x=zphot_cww_doy, bins=lims, color='#F2AB6D')
+        plt.title('CWW_DOY Template')
+        plt.savefig('CWW_DOY_Template.png')
+        plt.figure(2)
+        plt.hist(x=zphot_cww_shd, bins=lims, color='#F2AB6D')
+        plt.title('CWW_SHD Template')
+        plt.savefig('CWW_SHD_Template.png')
+        plt.figure(3)
+        plt.hist(x=zphot_doy, bins=lims, color='#F2AB6D')
+        plt.title('Pogiantti_DOY Template')
+        plt.savefig('Pogiantti_DOY_Template.png')
+        plt.figure(4)
+        plt.hist(x=zphot_shd, bins=lims, color='#F2AB6D')
+        plt.title('Pogiantti_SHD Template')
+        plt.savefig('Pogiantti_SHD_Template.png')
+        
+        #plt.xlabel('ZPHOT')
+        #plt.savefig(title+'.png')
+        
+    def magnitudes(self):
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from scipy.stats import kde
+        
+        self.mag_ks=self.datos['MAG_Ks']
+        plt.figure(1)
+        nbins=300
+        k = kde.gaussian_kde([self.zphot_doy,self.mag_ks])
+        xi, yi = np.mgrid[self.zphot_doy.min():self.zphot_doy.max():nbins*1j, self.mag_ks.min():self.mag_ks.max():nbins*1j]
+        zi = k(np.vstack([xi.flatten(), yi.flatten()]))
+ 
+        plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto')
+        
+        #plt.plot( self.zphot_doy, self.mag_ks, '.')
+        plt.title('Ks vs DOY')
+        plt.ylabel('Ks')
+        plt.xlabel('Zphot_DOY')
+        plt.ylim(0, 40)
+        plt.xlim(0, 2)
+        plt.show()
+        plt.savefig('Ks_vs_DOY.png')
+        '''
+        plt.figure(2)
+        plt.plot( self.zphot_shd, self.mag_ks, '.')
+        plt.title('Ks vs SHD')
+        plt.ylabel('Ks')
+        plt.xlabel('Zphot_SHD')
+        plt.ylim(0, 40)
+        plt.xlim(0, 2)
+        plt.savefig('Ks_vs_SHD.png')
+        plt.figure(3)
+        plt.plot( self.zphot_cww_doy, self.mag_ks, '.')
+        plt.title('Ks vs CWW_DOY')
+        plt.ylabel('Ks')
+        plt.xlabel('Zphot_CWW_DOY')
+        plt.ylim(0, 40)
+        plt.xlim(0, 2)
+        plt.savefig('Ks_vs_CWW_DOY.png')
+        plt.figure(4)
+        plt.plot( self.zphot_cww_shd, self.mag_ks, '.')
+        plt.title('Ks vs CWW_SHD')
+        plt.ylabel('Ks')
+        plt.xlabel('Zphot_CWW_SHD')
+        plt.ylim(0, 40)
+        plt.xlim(0, 2)
+        plt.savefig('Ks_vs_CWW_SHD.png')
+        '''
            
         
         
@@ -442,5 +592,8 @@ results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5])
 '''        
         
 results = PhotoZ("lephare_master_cat", 'master_cat.fits', 'Master_Cat')
+
+#results.get_stats_Master([0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7], False, True)
 #results.plot()
-results.get_stats_Master([0.,0.1,0.2,0.3,0.4,0.5, 0.6, 0.7])
+#results.Histograma()
+results.magnitudes()
