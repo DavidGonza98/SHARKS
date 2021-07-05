@@ -132,7 +132,7 @@ class fotometria():
         plt.legend()
         plt.title('Ajuste con error y con outliers')
         title1='Conerrores_y_conoutliers_de_archivoconjutode_' + ObjectCatalog.nombre+ '_y_'  + ObjectCatalog1.nombre
-        plt.savefig(title1+'.png')
+        #plt.savefig(title1+'.png')
         if quitarOutliers:
             z = (self.datos[magnitud2] - ajuste_con_error2)/self.datos[errormagnitud1]
 
@@ -147,7 +147,7 @@ class fotometria():
             plt.ylabel(magnitud2)
             plt.title('Ajuste sin errores y sin outliers')
             title2='Sinerrores_y_sinoutliers_de_archivoconjutode_' + ObjectCatalog.nombre+ '_y_'  + ObjectCatalog1.nombre
-            plt.savefig(title2+'.png')
+            #plt.savefig(title2+'.png')
             
             pinit = [1,1]
             out_sin_outliers = optimize.leastsq(errfunc, pinit, args=(pf_sin_outliers[1], pf_sin_outliers[0],  pf_sin_outliers[2]), full_output=1)
@@ -162,7 +162,7 @@ class fotometria():
             plt.ylabel(magnitud2)
             plt.title('Ajuste con error y sin outliers')
             title3='Conerrores_y_sinoutliers_de_archivoconjutode_' + ObjectCatalog.nombre+ '_y_'  + ObjectCatalog1.nombre
-            plt.savefig(title3+'.png')
+            #plt.savefig(title3+'.png')
         
         if pendienteuno:
             fitfunc = lambda p, x: p[0] + x
@@ -170,14 +170,14 @@ class fotometria():
             out = optimize.leastsq(errfunc, pinit, args=(self.datos[magnitud1], self.datos[magnitud2],  self.datos[errormagnitud1]), full_output=1)
             self.pfinal = out[0]
             ajuste_con_error2= self.datos[magnitud1] + self.pfinal[0]
-            z = (self.datos[magnitud2] - ajuste_con_error2)/self.datos[errormagnitud1]
+            zz = (self.datos[magnitud2] - ajuste_con_error2)/self.datos[errormagnitud1]
 
-            pf = pd.DataFrame(zip(self.datos[magnitud2], self.datos[magnitud1], self.datos[errormagnitud1]))
-            pf_sin_outliers = pf[(np.abs(z) < 2.5)]
+            pff = pd.DataFrame(zip(self.datos[magnitud2], self.datos[magnitud1], self.datos[errormagnitud1]))
+            pf_sin_outliers = pff[(np.abs(zz) < 2.5)]
             
-            m, b = plt.polyfit(pf_sin_outliers[1], pf_sin_outliers[0], 1)
+            mm, bb = plt.polyfit(pf_sin_outliers[1], pf_sin_outliers[0], 1)
             plt.figure(6)
-            plt.plot(pf_sin_outliers[1], pf_sin_outliers[1]+b, 'r-', label='Ajuste para m=1')
+            plt.plot(pf_sin_outliers[1], pf_sin_outliers[1]+1.827, 'r-', label='Ajuste para m=1')
                 
             
             pinit = [1,1]
@@ -186,15 +186,15 @@ class fotometria():
                 
             ajuste_sin_outliers= pf_sin_outliers[1] + self.pfinal_sin_outliers[0]
             
-                
+            
             plt.plot(pf_sin_outliers[1], ajuste_sin_outliers, 'm', label = "Ajuste y = %.3f + x" % (self.pfinal_sin_outliers[0]) )
-            plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'y.', label='Datos')
+            #plt.plot(pf_sin_outliers[1], pf_sin_outliers[0], 'y.', label='Datos')
             plt.legend()
             plt.title('Ajuste con pendiente m=1, con errores y sin outliers')
             plt.xlabel(magnitud1)
             plt.ylabel(magnitud2)
             title4='Conerrores_y_sinoutliers_de_archivoconjutode_' + ObjectCatalog.nombre+ '_y_'  + ObjectCatalog1.nombre
-            plt.savefig(title4+'.png')
+            #plt.savefig(title4+'.png')
         
 
       
