@@ -458,5 +458,26 @@ class Catalogo():
             print('No ha sido posible leer el catalogo '+self.nombre+' correctamente')
 
         
+import Fotometria
         
-           
+sharks_sgpe=Catalogo('Sharks_sgpe', 'sharks_sgpe.fits', 'RA', 'DEC')
+two_mass=Catalogo('2mass_infield_quality', '2mass_in_field.fits', 'RAJ2000', 'DEJ2000')
+
+sharks_sgpe.LeerArchivo()
+two_mass.LeerArchivo()     
+
+two_mass.Match(sharks_sgpe)
+#two_mass.MainCatalog()
+
+#sharks_sgpe.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
+#two_mass.mascara([['APERMAG3','greater_equal',12.3],['APERMAG3ERR','greater',0.], ['e_Kmag','greater',0.], ['Kmag', 'greater_equal', 12.7], ['Kmag', 'less_equal', 14.5]])
+two_mass.mascara([['APERMAG3','greater_equal',12.3],['APERMAG3ERR','greater',0.], ['e_Kmag','greater',0.], ['Kmag', 'greater_equal', 12.7], ['Kmag', 'less_equal', 14.5]])
+
+
+two_mass_fotometria= Fotometria.fotometria(two_mass)
+
+
+
+two_mass_fotometria.ajuste_lineal('Kmag', 'APERMAG3', two_mass, sharks_sgpe)
+
+two_mass_fotometria.errorfunc('Kmag', 'APERMAG3', 'e_Kmag', two_mass, sharks_sgpe, True, True)      

@@ -77,17 +77,29 @@ class PhotoZ():
         
     def __readMaster_Cat(self):
         from astropy.table import Table
+        if self.tag=="Master_Cat":
+            self.datos = Table.read(self.parentList, format= 'fits')
+            self.z_spec= self.datos["ZSPEC"]
+            #mask= (self.z_spec!=1)
+            self.datos=self.datos#[mask]
+            self.zspec=self.z_spec#[mask]
+            self.zphot_doy= self.datos["ZPHOT_DOY"]#[mask]
+            self.zphot_shd=self.datos["ZPHOT_SHD"]#[mask]
+            self.zphot_cww_doy=self.datos["ZPHOT_CWW_DOY"]#[mask]
+            self.zphot_cww_shd=self.datos["ZPHOT_CWW_SHD"]#[mask]
         
-        self.datos = Table.read(self.parentList, format= 'fits')
-        self.z_spec= self.datos["ZSPEC"]
-        mask= (self.z_spec!=1)
-        self.datos=self.datos[mask]
-        self.zspec=self.z_spec[mask]
-        self.zphot_doy= self.datos["ZPHOT_DOY"][mask]
-        self.zphot_shd=self.datos["ZPHOT_SHD"][mask]
-        self.zphot_cww_doy=self.datos["ZPHOT_CWW_DOY"][mask]
-        self.zphot_cww_shd=self.datos["ZPHOT_CWW_SHD"][mask]
-        
+        elif self.tag=="Master_Cat_bpz":
+            self.datos = Table.read(self.parentList, format= 'fits')
+            self.z_spec= self.datos["ZSPEC"]
+            #mask= (self.datos["TYPE_SHD"]=="G")&(self.datos["TYPE_DOY"]=="G")
+            self.datos=self.datos#[mask]
+            self.zspec=self.z_spec#[mask]
+            self.z_best_doy= self.datos["Z_BEST_DOY"]#[mask]
+            self.z_best_shd=self.datos["Z_BEST_SHD"]#[mask]
+            self.mag_z=self.datos["MAG_Z"]
+            self.mag_i=self.datos["MAG_I"]
+            self.mag_Y=self.datos["MAG_Y"]
+            self.mag_Ks=self.datos["MAG_KS"]
     
     def unify_data(self):
         import astropy.io.fits as pf
@@ -497,21 +509,95 @@ class PhotoZ():
         import numpy as np
         import seaborn as sns
         
-        self.phot_type= self.datos['PHOT_TYPE_SHD']
+        #self.phot_type= self.datos['PHOT_TYPE_SHD']
         
-        #print (self.zphot_cww_doy)
         
         #mask1 = (self.phot_type=='G')&(self.zspec>0)
-       
+        '''
         zphot_cww_doy=self.zphot_cww_doy#[mask1]
         zphot_cww_shd=self.zphot_cww_shd#[mask1]
         zphot_doy=self.zphot_doy#[mask1]
         zphot_shd=self.zphot_shd#[mask1]
+        '''
+        lims= np.arange(0, 1, 0.02)
         
         
-        lims= np.arange(0, 2, 0.05)
-        #[0. , 0.2,  0.4, 0.6, 0.8, 1., 1.2, 1.4, 1.6, 1.8, 2]
+        plt.figure(1)
+        plt.hist(x=self.zspec, bins=lims, bottom=True)
+        plt.title('Distribución de Redshift Espectroscópico')
+        plt.xlabel('ZSPEC')
+        #plt.savefig('Distribucion_redshift.png')
+        lim= np.arange(0, 3, 0.05)
         
+        plt.figure(2)
+        plt.hist(x=self.z_best_doy, bins=lim, label='DES only')#, alpha=0.7)
+        plt.hist(x=self.z_best_shd, bins=lim, label='SHARKS-DES', alpha=0.7)
+        plt.legend()
+        plt.title('Comparación Zphot SHARKS-DES y solo DES')
+        plt.xlabel('Z_BEST')
+        #plt.savefig('Comparacion_zphot_doy_shd.png')
+        #'''
+        plt.figure(3)
+        plt.figure(figsize=(10, 10), dpi=80)
+        plt.plot(self.z_best_doy, self.z_best_shd, '.')
+        plt.title('Comparación del zphot de SHARKS-DES frente solo a DES')
+        plt.xlabel('Z_BEST_DOY')
+        plt.ylabel('Z_BEST_SHD')
+        #plt.savefig('Comparacion_zbest_doy_shd.png')
+        #'''
+        self.outliers_doy=self.datos["OUTLIERS_DOY"]
+        self.outliers_shd=self.datos["OUTLIERS_SHD"]
+        
+        mask_doy = (self.outliers_doy==True)
+        mask_shd = (self.outliers_shd==True)
+        
+        self.z_best_doy_mask1= self.z_best_doy[mask_doy]
+        self.z_best_shd_mask1= self.z_best_shd[mask_doy]
+        self.z_best_doy_mask2= self.z_best_doy[mask_shd]
+        self.z_best_shd_mask2= self.z_best_shd[mask_shd]
+        
+        plt.figure(4)
+        plt.plot(self.z_best_doy, self.z_best_shd, 'r.')
+        plt.plot(self.z_best_doy_mask1, self.z_best_shd_mask1, 'b.')
+        plt.plot(self.z_best_doy_mask2, self.z_best_shd_mask2, 'g.')
+        plt.title('Comparación del zphot con diferencia de outliers por colores')
+        plt.xlabel('Z_BEST_DOY')
+        plt.ylabel('Z_BEST_SHD')
+        #plt.savefig('Comparacion_zbest_doy_colores.png')
+        
+        
+        self.mag_i_mask1=self.mag_i[mask_doy]
+        self.mag_i_mask2=self.mag_i[mask_shd]
+        
+        self.mag_z_mask1=self.mag_z[mask_doy]
+        self.mag_z_mask2=self.mag_z[mask_shd]
+        
+        self.mag_Ks_mask1=self.mag_Ks[mask_doy]
+        self.mag_Ks_mask2=self.mag_Ks[mask_shd]
+        limit= np.arange(20, 24, 0.1)
+                
+        plt.figure(5)       
+        plt.hist(self.mag_i_mask1, bins=limit, density=True, label='DES only', color='blue')
+        plt.hist(self.mag_i_mask2, bins=limit, density=True, label='SHARKS-DES', alpha=0.7, color='green')
+        plt.xlabel('MAG_I')
+        plt.legend()
+        plt.savefig('MAG_I_doy_shd.png')
+        
+        plt.figure(6)
+        plt.hist(self.mag_z_mask1, bins=limit, density=True, label='DES only', color='blue')
+        plt.hist(self.mag_z_mask2, bins=limit, density=True, label='SHARKS-DES', alpha=0.7, color='green')
+        plt.xlabel('MAG_Z')
+        plt.legend()
+        #plt.savefig('MAG_Z_doy_shd.png')
+        plt.figure(7)
+        plt.hist(self.mag_Ks_mask1, bins=limit, density=True, label='DES only', color='blue')
+        plt.hist(self.mag_Ks_mask2, bins=limit, density=True, label='SHARKS-DES', alpha=0.7, color='green')
+        plt.xlabel('MAG_Ks')
+        plt.legend()
+        #plt.savefig('MAG_KS_doy_shd.png')
+        
+        
+        '''
         plt.figure(1)
         plt.hist(x=zphot_cww_doy, bins=lims, color='#F2AB6D')
         plt.title('CWW_DOY Template')
@@ -531,29 +617,33 @@ class PhotoZ():
         
         #plt.xlabel('ZPHOT')
         #plt.savefig(title+'.png')
-        
+        '''
     def magnitudes(self):
         import matplotlib.pyplot as plt
         import numpy as np
         from scipy.stats import kde
         
-        self.mag_ks=self.datos['MAG_Ks']
+        #self.mag_ks=self.datos['MAG_Ks']
         plt.figure(1)
-        nbins=300
-        k = kde.gaussian_kde([self.zphot_doy,self.mag_ks])
-        xi, yi = np.mgrid[self.zphot_doy.min():self.zphot_doy.max():nbins*1j, self.mag_ks.min():self.mag_ks.max():nbins*1j]
+        nbins=200
+        x=self.mag_i-self.mag_z
+        y=self.mag_z-self.mag_Ks
+        k = kde.gaussian_kde([x,y])
+        xi, yi = np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j]
         zi = k(np.vstack([xi.flatten(), yi.flatten()]))
  
         plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto')
         
-        #plt.plot( self.zphot_doy, self.mag_ks, '.')
-        plt.title('Ks vs DOY')
-        plt.ylabel('Ks')
-        plt.xlabel('Zphot_DOY')
-        plt.ylim(0, 40)
-        plt.xlim(0, 2)
+        plt.plot( x, x-0.1)
+        plt.xlim(-0.5, 1.2)
+        plt.ylim(-1.75, 2.25)
+        plt.title('Separación galaxias y estrellas')
+        plt.ylabel('MAG_Z - MAG_Ks')
+        plt.xlabel('MAG_I - MAG_Z')
+        #plt.ylim(0, 40)
+        #plt.xlim(0, 2)
         plt.show()
-        plt.savefig('Ks_vs_DOY.png')
+        plt.savefig('Separación_galaxias_y_estrellas.png')
         '''
         plt.figure(2)
         plt.plot( self.zphot_shd, self.mag_ks, '.')
@@ -591,9 +681,9 @@ results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5])
 #results_eazy.delta_z_1pz()        
 '''        
         
-results = PhotoZ("lephare_master_cat", 'master_cat.fits', 'Master_Cat')
+results = PhotoZ("lephare_master_cat", 'master_cat_5s_bpz.fits', 'Master_Cat_bpz')
 
 #results.get_stats_Master([0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7], False, True)
 #results.plot()
-#results.Histograma()
-results.magnitudes()
+results.Histograma()
+#results.magnitudes()

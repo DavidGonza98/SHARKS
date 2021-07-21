@@ -57,41 +57,44 @@ sharks_fotometria.errorfunc('Kmag', 'MAG_AUTO', 'e_Kmag',sharks, twomass, True, 
 '''
 
 
-'''
+x=1
+print(x)
 sharks_sgpe=catalogo_sharks.Catalogo('Sharks_sgpe', 'sharks_sgpe.fits', 'RA', 'DEC')
-two_mass=catalogo_sharks.Catalogo('2mass_infield', '2mass_in_field.fits', 'RAJ2000', 'DEJ2000')
+two_mass=catalogo_sharks.Catalogo('2mass_infield_quality', '2mass_in_field_quality.fits', 'RAJ2000', 'DEJ2000')
 
-sharks_sgpe.LeerArchivo()
-two_mass.LeerArchivo()
+#sharks_sgpe.LeerArchivo()
+#two_mass.LeerArchivo()
 
-two_mass.Extraer_columna('RAJ2000')
-sharks_sgpe.Extraer_columna('RA')
+#two_mass.Extraer_columna('RAJ2000')
+#sharks_sgpe.Extraer_columna('RA')
 
 #sharks_sgpe.estado()
 #two_mass.estado()
 
-two_mass.Match(sharks_sgpe)
+#two_mass.Match(sharks_sgpe)
 
-two_mass.MainCatalog()
+#two_mass.MainCatalog()
 #sharks_sgpe.mascara([['MAG_AUTO','greater_equal',12.3],['MAGERR_AUTO','greater',0.]])
-two_mass.mascara([['APERMAG3','greater_equal',12.3],['APERMAG3ERR','greater',0.], ['e_Kmag','greater',0.], ['Kmag', 'greater_equal', 12.7], ['Kmag', 'less_equal', 14.5]])
+#two_mass.mascara([['APERMAG3','greater_equal',12.3],['APERMAG3ERR','greater',0.], ['e_Kmag','greater',0.], ['Kmag', 'greater_equal', 12.7], ['Kmag', 'less_equal', 14.5]])
 
 #two_mass.giveFluxes(['APERMAG3','APERMAG3ERR']) 
-
+'''
 two_mass_astrometria= astrometria_poo.astrometria(two_mass)
 
 two_mass_astrometria.Distancia_Angular()
 two_mass_astrometria.Histograma('Distancia angular')
 two_mass_astrometria.plot('X')
 two_mass_astrometria.plot('L')
-two_mass_fotometria= Fotometria.fotometria(two_mass)
+'''
+
+#two_mass_fotometria= Fotometria.fotometria(two_mass)
 
 
 
 #two_mass_fotometria.ajuste_lineal('Kmag', 'APERMAG3', two_mass, sharks_sgpe)
 
 #two_mass_fotometria.errorfunc('Kmag', 'APERMAG3', 'e_Kmag', two_mass, sharks_sgpe, True, True)
-'''
+
 '''
 des=catalogo_sharks.Catalogo('DES', 'des_in_field.fits', 'RA', 'DEC')
 sharks_sgpe_des=catalogo_sharks.Catalogo('Sharks_sgpe', 'sharks_sgpe.fits', 'RA', 'DEC')
@@ -136,11 +139,12 @@ sharks_sgpe_des_astrometria.plot('X')
 
 sharks_sgpe_des_astrometria.plot('L')
 '''
-
+'''
 results_eazy = PhotoZ.PhotoZ('eazy', ['gals_dessharks_1.txt', 'gals_dessharks_2.txt', 'gals_dessharks_3.txt', 'gals_dessharks_4.txt', 'gals_dessharks_5.txt'], 'sharks')
 
 results_eazy.getStats()  
 results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5])
+'''
 '''
 
 results_eazy = PhotoZ.PhotoZ('lephare', 'dessharks_pog.output', 'dessharks_pog')
@@ -164,6 +168,7 @@ results_eazy.getStats()
 results_eazy.getStats_Bin([0.,0.1,0.2,0.3,0.4,0.5, 0.6, 0.7])
 '''
 
-
-
-
+'''
+sharks_sgpe_des=catalogo_sharks.Catalogo('Sharks_sgpe', 'sharks_sgpe.fits', 'RA', 'DEC')
+two_mass=catalogo_sharks.Catalogo('2mass_infield', '2mass_in_field.fits', 'RAJ2000', 'DEJ2000')
+'''
