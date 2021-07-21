@@ -1,0 +1,18 @@
+CONFIG_FILE      config_dessharks
+LIB_TYPE         QSO
+LIB_NAME         LIB_QSO
+NUMBER_SED                28
+NUMBER_ROWS             8428
+RECORD_LENGTH            160
+FILTER_FILE        des_v2.filt
+FILTERS            g  r  i  z  Y  0.0005464375461
+MAG_TYPE         AB   
+AB_COR             -0.077    0.193    0.425    0.533    0.582    1.840
+FLUX_COR            1.000    1.000    1.000    1.000    1.000    1.000
+Z_STEP             0.010   3.000   0.100
+COSMOLOGY         67.400   0.315   0.685
+EXTINC_LAW      NONE 
+MOD_EXTINC        0      0
+EB_V              0.000
+EM_LINES         NO
+CREATION_DATE    Sat Jun 26 11:38:16 2021

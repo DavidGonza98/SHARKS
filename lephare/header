@@ -1,0 +1,51 @@
+#######################################
+# PHOTOMETRIC REDSHIFT with OPTIONS   #
+#          Input catalog              #
+# CAT_IN      : /home/acarnero/Documents/tfg/david/SHARKS/lephare/final/doy_catalog.input_5sigma
+# CAT_LINES     :        -99        -99
+# INP_TYPE    : M
+# CAT_MAG     : AB
+# CAT_FMT[0:MEME 1:MMEE]:      0
+#          Input library              #
+# FILTER_FILE : des_v2.filt
+# AB   g r i z Y 0.0005464375461 
+#    -0.077    0.193    0.425    0.533    0.582    1.840
+# ZPHOTLIB    : STAR_DES QSO_DES POG_DES 
+# using       : LIB_POG LIB_QSO LIB_STAR
+# ADD_EMLINES  : NO
+# Z_STEP      :    0.01  3.00  0.10
+# CHI2_RM_BD  :  10000.00 10000.00
+# Z_RANGE     :    0.000   99.990
+# EBV_RANGE   :    0.000    9.000
+# Z_INTERP    : YES
+# COSMOLOGY   :   67.40  0.32  0.69
+# EXTINC_LAW  :   NONE
+# EB_V        :   0.000
+# MOD_EXTINC  :       0      0
+# FAST_MODE   : NO
+# ERR_SCALE   :  0.070  0.010  0.010  0.030  0.100  0.050
+# ERR_FACTOR  :  1.000
+#          Options                    #
+# BD_SCALE    :        0
+# GLB_CONTEXT :           -1
+# DZ_WIN      :  3.000
+# MIN_THRES   :  0.100
+# MASS_SCALE  :   0.00   0.00
+# MAG_ABS     :   -10.00   -26.00
+# MAG_REF     :         4
+# PROB_INTZ   :  0.000
+# MABS_METHOD :    0
+# MABS_CONTEXT:         -1
+# MABS_REF    :    4
+# AUTO_ADAPT  : NO
+# NZ_PRIOR    :         0        0        0
+# ZFIX        : NO
+# SPEC_OUT    : NO
+# CHI2_OUT    : YES
+# PDZ_OUT     : #
+# PDZ_file    : #.pdz
+# PDZ_ZPH     : #.zph
+# PDZ_MOD     : #.mod
+# PDZ_MABS    : #.abs02 #.abs10 #.abs14
+# PDZ_MABS_FILT:     2   10   14
+

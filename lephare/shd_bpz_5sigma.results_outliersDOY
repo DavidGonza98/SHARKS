@@ -1,0 +1,64 @@
+#######################################
+# PHOTOMETRIC REDSHIFT with OPTIONS   #
+#          Input catalog              #
+# CAT_IN      : /home/acarnero/Documents/tfg/david/SHARKS/lephare/final/shd_catalog.input_outliersDOY
+# CAT_LINES     :        -99        -99
+# INP_TYPE    : M
+# CAT_MAG     : AB
+# CAT_FMT[0:MEME 1:MMEE]:      0
+#          Input library              #
+# FILTER_FILE : des_v2.filt
+# AB   g r i z Y 0.0005464375461 
+#    -0.077    0.193    0.425    0.533    0.582    1.840
+# ZPHOTLIB    : BPZ_DES 
+# using       : LIB_BPZ  
+# ADD_EMLINES  : NO
+# Z_STEP      :    0.01  3.00  0.10
+# CHI2_RM_BD  :  10000.00 10000.00
+# Z_RANGE     :    0.000   99.990
+# EBV_RANGE   :    0.000    9.000
+# Z_INTERP    : YES
+# COSMOLOGY   :   67.40  0.32  0.69
+# EXTINC_LAW  :   NONE
+# EB_V        :   0.000
+# MOD_EXTINC  :       0      0
+# FAST_MODE   : NO
+# ERR_SCALE   :  0.070  0.010  0.010  0.030  0.100  0.050
+# ERR_FACTOR  :  1.000
+#          Options                    #
+# BD_SCALE    :        0
+# GLB_CONTEXT :           -1
+# DZ_WIN      :  3.000
+# MIN_THRES   :  0.100
+# MASS_SCALE  :   0.00   0.00
+# MAG_ABS     :   -10.00   -26.00
+# MAG_REF     :         4
+# PROB_INTZ   :  0.000
+# MABS_METHOD :    0
+# MABS_CONTEXT:         -1
+# MABS_REF    :    4
+# AUTO_ADAPT  : NO
+# NZ_PRIOR    :         0        0        0
+# ZFIX        : NO
+# SPEC_OUT    : YES
+# CHI2_OUT    : YES
+# PDZ_OUT     : pdz
+# PDZ_file    : pdz.pdz
+# PDZ_ZPH     : pdz.zph
+# PDZ_MOD     : pdz.mod
+# PDZ_MABS    : pdz.abs02 pdz.abs10 pdz.abs14
+# PDZ_MABS_FILT:     2   10   14
+# CAT_OUT     : /home/acarnero/Documents/tfg/david/SHARKS/lephare/final/shd_bpz_5sigma.results_outliersDOY
+# PARA_OUT    : /home/acarnero/Documents/tfg/david/SHARKS/lephare/final/zphot_output.para
+# CREATION_DATE: Sat Jul  3 13:58:30 2021
+# Output format                       #
+#  IDENT   1 , Z_BEST   2 , Z_BEST68_LOW   3 , Z_BEST68_HIGH   4 , Z_ML   5 , 
+#  Z_BEST90_LOW   6 , Z_BEST90_HIGH   7 , Z_BEST99_LOW   8 , Z_BEST99_HIGH   9 , CHI_BEST  10 , 
+#  MOD_BEST  11 , EXTLAW_BEST  12 , EBV_BEST  13 , NBAND_USED  14 , Z_SEC  15 , 
+#  CHI_SEC  16 , MOD_SEC  17 , Z_QSO  18 , CHI_QSO  19 , MOD_QSO  20 , 
+#  MOD_STAR  21 , CHI_STAR  22 , MAG_OBS()  28 , ERR_MAG_OBS()  34 , MAG_MOD()  40 , 
+#  CONTEXT  41 , ZSPEC  42 , STRING_INPUT  47 , 3SSFR_SUP  48 , 
+#######################################
+          1    0.1663    0.0100    0.4682    0.2991    0.0100    0.5337    0.0100    0.7268 0.176382E+01      3      0    0.000    6  -99.0000 0.100000E+10   -999  -99.0000 0.100000E+11   -999   -999 0.100000E+11    23.471    22.771    22.539    22.462    21.912    22.225     0.090     0.060     0.092     0.152     0.303     0.174    23.453    22.789    22.514    22.391    22.364    22.213         63.00000 -.100000E+01  11.198549135885472 -30.948436974887407 0.01467 31 1097025068
+          2    0.4312    0.4293    0.4312    0.2030    0.4281    0.4332    0.0100    0.4379 0.254801E+01      6      0    0.000    6  -99.0000 0.100000E+10   -999  -99.0000 0.100000E+11   -999   -999 0.100000E+11    21.843    21.334    21.177    21.201    21.078    20.903     0.021     0.018     0.025     0.050     0.143     0.116    21.914    21.345    21.174    21.135    21.165    20.912         63.00000 -.100000E+01  11.507743974646365 -29.778337388480995 0.02298 31 1097861280
+          3    0.2760    0.0869    0.3338    0.3180    0.0599    0.6191    0.0302    0.8235 0.366583E+01      2      0    0.000    6  -99.0000 0.100000E+10   -999  -99.0000 0.100000E+11   -999   -999 0.100000E+11    24.380    23.488    23.217    22.691    22.483    22.013     0.155     0.084     0.117     0.140     0.373     0.163    24.514    23.473    23.076    22.820    22.721    22.127         63.00000 -.100000E+01  9.341827294850573 -29.92629168719544 0.02052 31 1081546019

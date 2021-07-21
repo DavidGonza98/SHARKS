@@ -1,0 +1,12 @@
+CONFIG_FILE      config_dessharks
+LIB_TYPE         STAR
+LIB_NAME         LIB_STAR
+NUMBER_SED               154
+NUMBER_ROWS              154
+RECORD_LENGTH             72
+FILTER_FILE        des_v2.filt
+FILTERS          g  r  i  z  Y  0.0005464375461
+MAG_TYPE         AB   
+AB_COR             -0.077    0.193    0.425    0.533    0.582    1.840
+FLUX_COR            1.000    1.000    1.000    1.000    1.000    1.000
+CREATION_DATE    Sat Jun 26 11:37:23 2021

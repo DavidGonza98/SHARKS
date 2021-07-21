@@ -1,0 +1,23 @@
+CONFIG_FILE      config_dessharks
+LIB_TYPE         G
+LIB_FMT          A
+GAL_SED    /home/acarnero/codes/lephare_dev/sed/GAL/POGGIANTI/POGGIANTI_MOD.list
+GAL_LIB    /home/acarnero/Documents/tfg/david/SHARKS/lephare/final/lib_bin/LIB_POG.bin
+GAL_WMAX        294
+GAL_FSCALE 0.100000E+01
+SEL_AGE    NONE
+AGE_RANGE    0.000000E+00 0.100000E+13
+NUMBER_SED      8
+MOD_000001        1   294    1 POGGIANTI/Ell.sed
+MOD_000002        2   294    1 POGGIANTI/S0.sed
+MOD_000003        3   294    1 POGGIANTI/Sa.sed
+MOD_000004        4   294    1 POGGIANTI/Sb.sed
+MOD_000005        5   294    1 POGGIANTI/Sc.sed
+MOD_000006        6   294    1 POGGIANTI/Sd.sed
+MOD_000007        7   294    1 POGGIANTI/SB2.sed
+MOD_000008        8   294    1 POGGIANTI/SB1.sed
+CREATION_DATE Sat Jun 26 11:27:23 2021
+NUMBER_ROWS            16
+RECORD_LENGTH        2384
+NUMBER_LBDA           294
+NUMBER_AGE              1
